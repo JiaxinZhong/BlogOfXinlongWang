@@ -1,0 +1,143 @@
+\documentclass[UTF8]{ctexbook}
+
+% SCI book 的模板 sty，适用于中文
+\usepackage{scibookchn}
+\usepackage{scigeneral}
+
+
+\begin{document}
+
+\chapter{声波的基本性质}
+
+\section{全反射状态的声场与声能流}
+英文标题：
+Sound Fields and Energy Flux Under Total Reflection
+
+Web:
+http://xlwangnu.blog.163.com/blog/static/190719270201192502043374/
+
+\emph{摘要}
+全反射是常见声光现象。在媒质交界面上，若入射媒质的声速不如透射媒质的（或折
+射率小于1），则当入射角足够大就会发生全反射，入射声能悉数反射。虽然如此，
+全反射下声场如何分布？透射媒质中是否存在声场？如存在，取何种波动方式？此
+正本文试图回答的问题。分析表明，在全反射下，（1）入射媒质中的总声场在界面法
+向呈驻波形式，而在界面切向呈行波形式；（2）仍存在透射声波，但以沿界面传播的
+表面波形式存在，但垂直于界面的方向上指数衰减。
+
+若透射媒质的声速$c_2$大于入射媒质的声速$c_1$，且入射角（incident angle）
+$\theta\st{i}$大于全反射临界角$\theta\st{ic}$，
+\begin{equation}
+\theta\st{ic} = \arcsin \frac{c_1}{c_2} = \arcsin n, \qty(n=\frac{c_1}{c_2}
+<1)
+\end{equation}
+声波全部反射。此即著名的\emph{声全反射现象}（total reflection）。与光
+的全反射略有不同，声的全反射一般发生在“硬界面”，如从空气到水，从水到固体。
+光的全反射则发生在“软表面”---从光密介质入射到光疏介质，如光纤内的光反射，故
+而一般称之为全内反射（Total internal reflection）。或问：在全反射状态，声场
+分布如何？声能如何传播？此正本文所欲讨论的。
+
+\subsection{声场分布}
+如图xx所示，频率为$\omega$的平面声波从声特性阻抗率为$\rho_1c_1$的媒质中以角
+度$\theta\st{i}$入射到声特性阻抗率为$\rho_2c_2$的媒质上。
+设入射方向和两媒质边界面的法向构成的平面为$(x,y)$平面，$x$轴沿边界内法向，
+$y$轴在边界平面上。根据平面行波论，入射（incident）、反射（reflected）和
+透射（transmitted）的声场解各具如下形式：
+\begin{equation}
+	\label{eq:totalref_pressure}
+	\begin{cases}
+	p\st{i} = p\st{ia} \me^{-\mj k_1 \vb{n}\st{i} \vdot \vb{r}}
+	\qc \vb{v}\st{i} = \dfrac{p\st{i}}{\rho_1c_1} \vb{n}\st{i}\\
+	p\st{r} = p\st{ra} \me^{-\mj k_1 \vb{n}\st{r} \vdot \vb{r}}
+	\qc \vb{v}\st{r} = \dfrac{p\st{r}}{\rho_1c_1} \vb{n}\st{r}
+	\qc (p\st{ra} = r_p p\st{ia}) \\
+	p\st{t} = p\st{ta} \me^{-\mj k_2 \vb{n}\st{t} \vdot \vb{t}}
+	\qc \vb{v}\st{t} = \dfrac{p\st{t}}{\rho_2c_2} \vb{n}\st{t}
+	\qc (p\st{ta} = t_p p\st{ta}) 
+	\end{cases}
+\end{equation}
+式中，$p\st{ia}$、$p\st{ra}$和$p\st{ta}$分别为入射、反射和透射（折射）
+波的声压幅度，$r_p$和$t_p$分别为声压反射系数和透射系数，$\theta\st{t}$为
+折射角（refracted angle），$k_1$和$k_2$分别为入射和透射媒质的波数，
+而$\vb{n}\st{i}$、$\vb{n}\st{r}$和$\vb{n}\st{t}$则依次为入射、反射和
+折射波的方向矢量，
+\begin{equation}
+	\vb{n}\st{i}=(\cos \theta\st{i}, \sin \theta\st{i})\qc 
+	\vb{n}\st{r}=(-\cos \theta\st{r}, \sin \theta\st{r})\qc 
+	\vb{n}\st{t}=(\cos \theta\st{t}, \sin \theta\st{t})
+\end{equation}
+在$\vb{n}\st{r}$表达式中，已利用了关系$\vb{theta}\st{r}=\theta\st{i}$。为
+简洁起见，本文一根省略时间因子$\exp(\mj \omega t)$。
+
+根据Snell定律（折射律），
+\begin{equation}
+	\label{eq:totalref_snell}
+	\sin\theta\st{t} = \frac{\sin\theta\st{i}}{n}\qc (n<1)
+\end{equation}
+当$\theta>\theta\st{ic}$时，$\sin\theta\st{t}>1$，$\theta\st{t}$不复为实数
+而是复数。是以，作复变换：$\theta\st{t} \rightarrow \psi$，
+\begin{equation}
+	\label{eq:totalref_theta_trans}
+	\theta\st{t} = \frac{\uppi}{2}+\mj \psi\qc 
+	\begin{cases}
+		\sin \theta\st{t} = \cosh \psi\\
+		\cos\theta\st{t} = -\mj \sinh \psi
+	\end{cases}
+\end{equation}
+代入折射公式(\ref{eq:totalref_snell})，则 Snell定律改为
+\begin{equation}
+	\cosh \psi = \frac{\sin \theta\st{i}}{n}
+\end{equation}
+由此可知，$\psi$具有实数解。当$\theta\st{i}$从$\theta\st{ic}$增至$\uppi/2$
+时，$\psi$从$0$单调增大至$\arccosh(1/n)>0$。此处杂提醒读者，数学上，变换
+(\ref{eq:totalref_theta_trans})中的$\psi$可正可负。但考虑到下面公式xx(12)
+给出的透射声压解$p\st{t}$中，声波必沿$x$正向衰减，$\psi$只能取正值。引入变
+换(\ref{eq:totalref_theta_trans})后，全反射（$\theta\st{i}>\theta\st{ic}$）
+状态下的声压反射系数$r_p$和透射系数$t_p$可表为\footnote{编者著：利用$x=0$
+处的边界条件，即$\begin{cases}1+r_p = t_p\\ \dfrac{1-r_p}{z\st{s1}} =
+	\dfrac{t_p}{z\st{s2}}\end{cases}$，其中法向声阻抗率分别是
+$z\st{s1}= \rho_1c_1/\cos \theta\st{i}, z\st{s2} = \rho_2c_2
+/\cos\theta\st{i}$，得到$r_p = \dfrac{z\st{s2}-z\st{s1}}{z\st{s2}+z\st{s1}}
+$。}
+\begin{equation}
+	\label{eq:totalref_rptp}
+	\begin{cases}
+		r_p & = \dfrac{p\st{ra}}{p\st{ia}} = \dfrac{m\cos \theta \st{i} +
+	\mj n \sinh \psi }{m\cos \theta\st{i} - \mj n \sinh \psi} = 
+	\me^{2\mj \phi}\\
+	t_p&=\dfrac{p\st{ta}}{p\st{ia}} = \dfrac{2m\cos \theta \st{i}}{m\cos 
+		\theta\st{i} - \mj n \sinh \psi} = 2\cos\phi \me^{\mj \phi}
+	\end{cases}
+	\qc \qty(m = \frac{\rho_2}{\rho_1})
+\end{equation}
+式中的相位角$\phi$由下列公式给出
+\begin{equation}
+	\tan \phi = \frac{n\sinh \psi}{m \cos \theta\st{i}} = 
+	\frac{\rho_1c_1}{\rho_2c_2} \frac{\sinh \psi}{\cos \theta\st{i}}
+	\qc \qty(0<\phi<\frac{\uppi}{2})
+\end{equation}
+从式(\ref{eq:totalref_rptp})可见，当入射角$\theta\st{i}$大于临界角
+$\theta\st{ic}$时，反射波的振幅等于入射的（$|r_p|=1$），但入射和反射
+声压间存在$2\phi$的相位差。把$r_p=\exp(2\mj \phi)$代入入射和反射声压表达
+式(\ref{eq:totalref_pressure})，两者相加再简化，得到入射侧的总声压场
+$p_1$和速度场$\vb{v}_1=(v_{1,x}, v_{2,y})$的表达式
+\begin{equation}
+	\begin{cases}
+		p_1&= p\st{i}+p\st{r} = 2p\st{ia}\cos(k_1x\cos\theta\st{i}+\phi)
+		\me^{-\mj (k_1y\sin\theta\st{i}-\phi)}\\
+		v_{1,x}&= v_{\mi x} + v_{\mathrm{r}x} = 2v\st{ia}\sin
+		(k_1x\cos\theta\st{i}+\phi)\cos\theta\st{i}
+		\me^{-\mj \qty(k_1y\sin\theta\st{i}-\phi+ \uppi/2)}\\
+		v_{1,y}&= v_{\mi y} + v_{\mathrm{r}y} = 2v\st{ia}\sin
+		(k_1x\cos\theta\st{i}+\phi)\sin\theta\st{i}
+		\me^{-\mj \qty(k_1y\sin\theta\st{i}-\phi)}
+	\end{cases}
+	\qc \qty(v\st{ia} = \frac{p\st{ia}}{\rho_1c_1})
+\end{equation}
+式中，$v\st{ia}$是入射声波质点速度振幅。可见，入射侧声场因全反射而在法向
+（负$x$方向）形成了驻波，但沿界面（$y$方向）仍是传播的。沿界面的传播的相速度和波长分别为
+% \begin{equation}
+	% \begin{cases}
+		% c_{1y} & = \frac{}
+	% \end{cases}
+% \end{equation}
+\end{document}
