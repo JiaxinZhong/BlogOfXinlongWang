@@ -4,10 +4,169 @@
 \usepackage{scibookchn}
 \usepackage{scigeneral}
 
+% start each section on a new page
+\let\stdsection\section
+\renewcommand\section{\newpage\stdsection}
+
 
 \begin{document}
 
+\tableofcontents
+
+
 \chapter{声波的基本性质}
+
+\section{声学量的复数运算\\
+Complex Operations for Acoustical Quantities}
+
+\emph{摘要}\ 振动与声学量虽然是可观测的实数物理量，但也可用复数表示。
+复数表示不但可极大地简化数学演算，因此无论在线性还是非线性的声学理论中均
+广泛采用复数表示声学量。本文简述声学量的复数表示及运算规则，并举例说明。
+
+设小写的$x$为实数量，而大写的$X$为对应的复数量，即$x=\Re(X)$，其中
+$\Re(X)$表示取复数量$X$的实部，即
+$$
+x = \Re(X) = \frac12(X+X^*)
+$$
+其中右上标的星号「*」表示复共轭操作。显然，实数量$x$与其对应的复数量$X$并非
+一一对应。复数量$X$加上任意的线虚数$\mj y$并不影响其意义：
+$$
+x = \Re(X) = \Re(X+\mj y)
+$$
+
+\subsection{加法规则}
+若$x$、$y$和$z$为实数量，$a$和$b$是任意的实数，$z=ax+by$。设$x$、$y$和$z$
+对应的复数量分别为$X$、$Y$和$Z$，即$x=\Re(X)$、$y=\Re(Y)$和$z=\Re(Z)$，则
+因
+$$
+z = ax+by = \Re(aX+bY) = \Re(Z)
+$$
+所以，复数量$X$、$Y$和$Z$之间存在以下关系
+$$Z=aX+bY$$
+现设$x$是时间$t$的函数：$x=x(t)$。它对应的复数量$X$也是时间的函数：$X=
+X(t)$。由于导数和积分本质上是线性加法去处，因此存在关系：
+$$\dv{t} \Re(X) =\Re\qty(\dv{X}{t})\qc \int \Re(X) \dd{t} = \Re 
+\qty(\int X\dd{t})$$
+
+即复数$\dv*{X}{t}$是实数量导数$\dv*{x}{t}$对应的复数量，复数积分$\int X
+\dd{t}$是实数积分$\int x\dd{t}$对应的复数量。
+
+\subsection{乘法规则}
+现设$z$是$x$和$y$之积，$z=xy$，对应的复数量为$Z$。根据定义，
+$$z=xy =\Re(X)\Re(Y) = \Re(\Re(X)Y)=\Re(X\Re(Y))$$
+所以，
+\begin{subequations}
+	\label{eq:complexop_Z}
+	\begin{equation}Z= \Re(X)Y = \frac12 (XY+X^*Y)\end{equation}
+	\begin{equation}Z=X\Re(Y) = \frac12 (XY+XY^*)\end{equation}
+\end{subequations}
+再次申明，式(\ref{eq:complexop_Z})中两个表式所给出的$Z$在数学上严格而言是
+不等的，只因$Z$的实部才有物理意义，故两种表示在物理上等价。
+
+\subsection{时间简谐量的周期平均值}
+复数表示对于简谐声学量的计算尤其有效。假设与时间$t$的依赖关系为$\exp(\mj 
+\omega t)$，其中$\omega = 2\uppi /T$为频率，$T$是振动周期，$\mj$是虚数单位
+。例如，$X$和$Y$是时间简谐的复量
+$$X=X\st{a} \me^{\mj \omega t }\qc Y = Y\st{a}\me^{\mj \omega t}$$
+其中，$X\st{a}$和$Y\st{a}$分别为$X$和$Y$的复振幅，是与时间$t$无关的常数。
+则有
+$$\dd{X}{t}=\mj \omega X\qc \int X\dd{t} = \frac{X}{\mj \omega}$$
+根据(\ref{eq:complexop_Z})，此时乘积$z=xy$的复数表达式为
+$$Z=\frac12 X\st{a}^* Y\st{a}+\frac12 X\st{a}Y\st{a}\me^{2\mj \omega t}$$
+上式第二项有时间依赖关系$\exp(2\mj \omega  t)$，描述了乘积量$z$的瞬态运动。
+这是一个二次谐波（频率$2\omega$），其周期平均为零。第一项是与时间无关的
+「直流」项，等于复量$Z$的周期平均值：
+$$\bar{Z} = \frac1T \int_0^T Z(t) \dd{t} = \frac12 X\st{a}^* Y\st{a} =
+\frac12 X^* Y$$
+所以，乘积量$z=xy$的周期均值为
+$$\bar{z}=\frac1T \int_0^T z\dd{t} = \overline{\Re(Z)} = \Re(\bar{Z})
+=\frac12\Re(X^*Y)$$
+即，存在以下重要的乘积平均法则
+\begin{equation}
+	\overline{x(t)y(t)} = \frac12 \Re(X^*Y) \label{eq:complexop_xy}
+\end{equation}
+对于简谐振动而言，振动物理量本身的时间均值往往为零。但如振动量的乘积等非
+线性运算，多产生类似的「直流」项，因而平均值非零。\emph{「直流」和高次谐波
+的产生为典型的非线性效应。}
+
+以下以若干典型振动与声学量为例，说明复数运算的应用。
+
+\subsubsection{单振子周期平均能量}
+设有质量为$M\st{m}$、弹性系数为$K\st{m}$的单振子，其质点的位移为$x$，速度
+$v$，对应的复位移为$X$，复速度为$V$。单振子的势能和动能分别为
+$$E\st{p} = \frac12 K\st{m} x^2 = \frac12 K\st{m}\qty[\Re(X)]^2$$
+$$E\st{k} = \frac12 M\st{m} v^2 = \frac12 M\st{m} \qty[\Re(V)]^2$$
+若单振子仅作简谐振动，则根据式(\ref{eq:complexop_xy})，势能和动能的一个周期
+平均值分别为
+$$\overline{E\st{p}} = \frac12 K\st{m} \overline{x^2} = \frac14 K\st{m}
+|X|^2$$
+$$\overline{E\st{k}} = \frac12 M\st{m} \overline{v^2} = \frac14 M\st{m}
+|V|^2$$
+对于自由振动，
+$$V = \mj \omega_0 X\qc \qty(\omega_0 = \sqrt{\frac{K\st{m}}{M\st{m}}})$$
+代入前式，知平均势能等于平均动能：
+$$\overline{E\st{p}} = \overline{E\st{k}}$$
+
+\subsubsection{声能通量密度和声强的运算}
+声能通量密度$\vb{I}$为声压$p$与速度适量$\vb{v}$的乘积：$\vb{I}=p \vb{v}$。
+声压、速度和声能通量密度等物理量本身是实量，但均可以用复数表示。在振动
+与声的问题中，极大部分情形下所涉及的是复数量及其运算，因此在下文中我们放弃
+前面用大写字母表示复量的做法，而一概约定：除非特别说明，\emph{所有的变量符号
+均表示对应实量的复量}，如声压、复速度和复能量通量密度仍用$p$、$\vb{v}$和
+$\vb{I}$表示；如果确实需要用到实数量，则只要对这些复数量取实部操作$\Re$即可
+。例如，根据公式(\ref{eq:complexop_Z})，复声能通量密度的公式可写成
+\begin{equation}
+	\label{eq:complexop_I}
+	\vb{I} = \frac12 p\vb{v} + \frac12 p^* \vb{v}
+\end{equation}
+取实部$\Re(\vb{I})$即为实声能通量密度。
+
+对频率为$\omega$的简谐声波，公式(\ref{eq:complexop_I})的第一项描述声能通量
+密度之瞬变，而第二项是「直流」分量，为复声能通量密度之时间均值：
+\begin{equation}
+	\label{eq:complexop_barI}
+	\overline{\vb{I}} = \frac1T \int_t^{t+T}\dd{t} = \frac12 p^* \vb{v}
+\end{equation}
+取其实部即得到\emph{声强}：
+$$\Re(\overline{\vb{I}}) = \frac12 \Re\qty(p^* \vb{v})$$
+可见，采用复运算，易分享场量（此处是声能通量密度）的时变和时不变成份。
+
+对于平面行波，传播方向为$\vb{n}$（单位矢量），则媒质质点的振速$\vb{v}
+=(p/z_0)\vb{n}$，代入公式(\ref{eq:complexop_I})和(\ref{eq:complexop_barI})
+得到
+$$\vb{I} = \frac{1}{2z_0}\qty(p^2+|p|^2)\vb{n}$$
+$$\overline{\vb{i}} = \frac{1}{2z_0} \overline{\qty(p^2+|p|^2)}
+=\frac{|p|^2}{2\rho_0 c_0 }\vb{n}$$
+式中$z_0=\rho_0c_0$是媒质的声特性阻抗率。
+
+\subsubsection{声能密度复数运算}
+对平面波而言\footnote{编著添加。}，用实声学量表示的流体声场的（瞬时）声能
+密度为
+$$\eps = \frac12 \rho_0 \qty[\vb{v} \vdot \vb{v} +\qty(\frac{p}{z_0})]$$
+其中的声压$p$和速度$\vb{v}$是实数量。若全改用复量表示，且仍采用相同的变量
+符号，则上式应改为
+\begin{align}
+	\label{eq:complexop_eps}
+	\eps & = \frac14 \rho_0 \qty[(\vb{v}\vdot\vb{v} + \vb{v}^*\vdot
+	\vb{v}) +\frac{1}{z_0^2} \qty(p^2+p^* p)]\nonumber\\
+	& = \frac14 \rho_0 \qty[\vb{v}\vdot\vb{v}+ \qty(\frac{p}{z_0} )^2]
+	+\frac14 \rho_0 \qty(\vb{v}^*\vdot \vb{v} + \qty|\frac{p}{z_0}|^2)
+\end{align}
+对频率$\omega$的简谐声波，公式(\ref{eq:complexop_eps})后一等式中的第一项描述
+声能密度的瞬时变化，而第二项是「直流」分量，为复声能密度之时间周期平均值，
+取其实部即为平均声能密度。因此，简谐声场的平均声能密度为
+\begin{equation}
+	\label{eq:complexop_bareps}
+	\overline{\eps} = \frac14 \rho_0 \qty(|\vb{v}|^2 +\frac{|p|^2}{z_0^2})
+\end{equation}
+
+对于沿方向$\vb{n}$传播的平面行波，把$\vb{v}=(p/z_0)\vb{n}$代入公式
+(\ref{eq:complexop_eps})和(\ref{eq:complexop_bareps})得到
+\begin{align*}
+	\eps &= \frac{1}{2\rho_0c_0^2} (p^2+|p|^2)\\
+	\overline{\eps} &= \frac{1}{2\rho_0c_0^2} |p|^2
+\end{align*}
+
 
 \section{全反射状态的声场与声能流}
 英文标题：
@@ -140,4 +299,5 @@ $p_1$和速度场$\vb{v}_1=(v_{1,x}, v_{2,y})$的表达式
 		% c_{1y} & = \frac{}
 	% \end{cases}
 % \end{equation}
+ 
 \end{document}
