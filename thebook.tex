@@ -4,6 +4,8 @@
 \usepackage{scibookchn}
 \usepackage{scigeneral}
 
+\title{王新龙声学博文}
+
 % start each section on a new page
 \let\stdsection\section
 \renewcommand\section{\newpage\stdsection}
@@ -11,8 +13,9 @@
 
 \begin{document}
 
-\tableofcontents
+\maketitle
 
+\tableofcontents
 
 \chapter{声波的基本性质}
 
@@ -129,13 +132,13 @@ $\vb{I}$表示；如果确实需要用到实数量，则只要对这些复数量
 \end{equation}
 取其实部即得到\emph{声强}：
 $$\Re(\overline{\vb{I}}) = \frac12 \Re\qty(p^* \vb{v})$$
-可见，采用复运算，易分享场量（此处是声能通量密度）的时变和时不变成份。
+可见，采用复运算，易分离场量（此处是声能通量密度）的时变和时不变成份。
 
 对于平面行波，传播方向为$\vb{n}$（单位矢量），则媒质质点的振速$\vb{v}
 =(p/z_0)\vb{n}$，代入公式(\ref{eq:complexop_I})和(\ref{eq:complexop_barI})
 得到
 $$\vb{I} = \frac{1}{2z_0}\qty(p^2+|p|^2)\vb{n}$$
-$$\overline{\vb{i}} = \frac{1}{2z_0} \overline{\qty(p^2+|p|^2)}
+$$\overline{\vb{I}} = \frac{1}{2z_0} \overline{\qty(p^2+|p|^2)}
 =\frac{|p|^2}{2\rho_0 c_0 }\vb{n}$$
 式中$z_0=\rho_0c_0$是媒质的声特性阻抗率。
 
@@ -220,6 +223,7 @@ $y$轴在边界平面上。根据平面行波论，入射（incident）、反射
 而$\vb{n}\st{i}$、$\vb{n}\st{r}$和$\vb{n}\st{t}$则依次为入射、反射和
 折射波的方向矢量，
 \begin{equation}
+	\label{eq:totalref_n}
 	\vb{n}\st{i}=(\cos \theta\st{i}, \sin \theta\st{i})\qc 
 	\vb{n}\st{r}=(-\cos \theta\st{r}, \sin \theta\st{r})\qc 
 	\vb{n}\st{t}=(\cos \theta\st{t}, \sin \theta\st{t})
@@ -227,7 +231,7 @@ $y$轴在边界平面上。根据平面行波论，入射（incident）、反射
 在$\vb{n}\st{r}$表达式中，已利用了关系$\vb{theta}\st{r}=\theta\st{i}$。为
 简洁起见，本文一根省略时间因子$\exp(\mj \omega t)$。
 
-根据Snell定律（折射律），
+根据Snell定律(折射律)，
 \begin{equation}
 	\label{eq:totalref_snell}
 	\sin\theta\st{t} = \frac{\sin\theta\st{i}}{n}\qc (n<1)
@@ -244,6 +248,7 @@ $y$轴在边界平面上。根据平面行波论，入射（incident）、反射
 \end{equation}
 代入折射公式(\ref{eq:totalref_snell})，则 Snell定律改为
 \begin{equation}
+	\label{eq:totalref_snell2}
 	\cosh \psi = \frac{\sin \theta\st{i}}{n}
 \end{equation}
 由此可知，$\psi$具有实数解。当$\theta\st{i}$从$\theta\st{ic}$增至$\uppi/2$
@@ -280,6 +285,7 @@ $\theta\st{ic}$时，反射波的振幅等于入射的（$|r_p|=1$），但入�
 式(\ref{eq:totalref_pressure})，两者相加再简化，得到入射侧的总声压场
 $p_1$和速度场$\vb{v}_1=(v_{1,x}, v_{2,y})$的表达式
 \begin{equation}
+	\label{eq:totalref_pv1}
 	\begin{cases}
 		p_1&= p\st{i}+p\st{r} = 2p\st{ia}\cos(k_1x\cos\theta\st{i}+\phi)
 		\me^{-\mj (k_1y\sin\theta\st{i}-\phi)}\\
@@ -294,10 +300,370 @@ $p_1$和速度场$\vb{v}_1=(v_{1,x}, v_{2,y})$的表达式
 \end{equation}
 式中，$v\st{ia}$是入射声波质点速度振幅。可见，入射侧声场因全反射而在法向
 （负$x$方向）形成了驻波，但沿界面（$y$方向）仍是传播的。沿界面的传播的相速度和波长分别为
-% \begin{equation}
-	% \begin{cases}
-		% c_{1y} & = \frac{}
-	% \end{cases}
-% \end{equation}
+\begin{equation}
+	\label{eq:totalref_interface1}
+	\begin{cases}
+		c_{1y} & = \dfrac{\omega}{k_1\sin \theta\st{i}}
+		=\dfrac{c_1}{\sin\theta\st{i}} \geq c_1\\
+		\displaystyle
+		\lambda_{1y} &= \dfrac{2\uppi}{k_1\sin\theta\st{i}}
+		=\dfrac{\lambda_1}{\sin\theta\st{i}} \geq\lambda_1
+	\end{cases}
+\end{equation}
+所以，沿界面传播的相速度大于入射媒质的常规声速$c_1=\omega /k_1$，波长$\lambda
+_{1y}$比常规波长$\lambda_1 = k_1/2\uppi$要长；仅当入射波完全平行于界面
+($\theta\st{i}=\uppi/2$)时，$c_{1y}=c_1$，$\lambda_{1y}=\lambda_1$。
+公式(\ref{eq:totalref_pv1})也表明，在全反射下，法向驻波声场依赖于入射角
+$\theta\st{i}$的相位$\phi$，故驻波的波节和波腹位置因入射角$\theta\st{i}$
+变化而发生漂移。值得注意的是，在临界全反射($\theta\st{i}=\theta\st{ic}$)下，
+$\phi=0$，$t_p=2$，即透射声压是入射声压的两倍。当入射角$\theta\st{i}\to 
+\uppi/2$(最大入射角)时，相位$\phi: 0\to \uppi/2$，透射系数的幅值$|t_p|$
+从2降至0.从式(\ref{eq:totalref_pv1})还可看出，在入射侧的任意位置，速度分量
+相位相差$\uppi/2$，流体质点在$(x,y)$平面上围绕平衡位置作椭圆运动，与单纯的
+行波场不同。
+
+把变换式(\ref{eq:totalref_snell})代入式(\ref{eq:totalref_n})中$\vb{n}\st{t}$
+的表达式中，结果为：
+\begin{equation}
+\vb{n}\st{t} = (-\mj \sinh \psi, \cosh\psi)
+\label{eq:totalref_nt}
+\end{equation}
+即透射波矢$\vb{k}\st{t} = k_2\vb{n}\st{t}$的法向分量是虚数，表明透射波在$x$
+方向是非传播的。利用式(\ref{eq:totalref_rptp})给出的透射系数$t_p$和式
+(\ref{eq:totalref_nt})，式(\ref{eq:totalref_pressure})中的透射声压$p\st{t}$
+和速度矢量$\vb{v}\st{t}=(v_{\mathrm{t,} x}, v_{\mathrm{t,} y})$经整理可进一步表为
+\begin{equation}
+	\label{eq:totalref_pvt}
+	\begin{cases}
+		p\st{t} = 2p\st{ia} \cos \phi \me^{-k_2x\sinh \psi - \mj (k_2 y
+		\cosh \psi -\phi)}\\
+		v_{\mathrm{t,}x} = \dfrac{\rho_1c_1}{\rho_2c_2} 2v\st{ia} \cos\phi
+		\sinh \psi \me^{k_2x\sinh \psi - \mj\qty(k_2y\cosh \psi -\phi
+		+\uppi/2)}\\
+		v_{\mathrm{t,}y} = \dfrac{\rho_1c_1}{\rho_2c_2} 2v\st{ia} \cos\phi
+		\cosh \psi \me^{k_2x\sinh \psi - \mj\qty(k_2y\cosh \psi -\phi
+		)}
+	\end{cases}
+\end{equation}
+这表明，在全反射下透射波是沿界面传播、但法向衰减的\emph{声表面波}(surface
+waves) --- 仅存在于边界面附近的声波，类似于固体表面的瑞利波(Rayleigh waves)
+。透射波的幅度随离边界之深度$x$而指数衰减，若令$k_2x\sinh \psi = 1$，则得到
+表面波的「透射深度」$x=d$为：
+\begin{equation}
+	2\uppi \frac{d}{\lambda_2} = \frac{1}{\sinh\psi} = \frac{n}{\sqrt{
+		\sin^2\theta\st{i}-n^2}}
+\end{equation}
+所以，透射深度$d$是入射角$\theta\st{i}$的函数。当入射角$\theta\st{i}$大于
+但接近临界角$\theta\st{ic}$时，透射深度$d$很大；若$\theta\st{i}=\theta\st{ic}
+$，则$\psi\to0$，$d \to \infty$，透射声波在$x$方向均匀，此正是沿$y$方向传播
+的平面波。
+从式(\ref{eq:totalref_pvt})还可看出，在透射侧的任意位置，速度分量相位相差
+$\uppi/2$，流体质点在$(x,y)$平面上围绕平衡位置作椭圆运动，这也是一般表面波声
+场的特性。从式(\ref{eq:totalref_pvt})可知，沿平行于表面的$y$方向传播的
+相声速和波长$\lambda_{2y}$分别为：
+\begin{equation}
+	\label{eq:totalref_interface2}
+	\begin{cases}
+		c_{2y} = \dfrac{\omega}{k_2\cosh\psi} = \dfrac{c_2}{\cosh\psi}<c_2\\
+		\lambda_{2y} = \dfrac{2\uppi}{k_2\cosh \psi} = \dfrac{
+		\lambda_2}{\cosh \psi} <\lambda_2
+	\end{cases}
+\end{equation}
+即，全反射下透射波沿界面的传播速度$c_{2y}$小于常规声速$c_2$。根据式
+(\ref{eq:totalref_snell2})以及$c_1=nc_2$和$\lambda_1 = n\lambda_2$，
+比较式(\ref{eq:totalref_interface1})和式(\ref{eq:totalref_interface2})知
+$$
+c_{1y} = c_{2y} \qc \lambda_{1y}=\lambda_{2y}
+$$
+所以，在界面两侧，沿界面传播的相速度和波长是相等的。其实，根据Snell定律，
+$k_1\sin\theta\st{i} = k_2\sin\theta\st{t}$，这一结论对任意入射皆成立。
  
+
+\chapter{声波在管中的传播}
+
+\section{缓变截面管内的声传播\\
+Sound Propagation in Ducts of Slowly Varying Cross Section}
+
+\emph{摘要}\ 
+连续变截面管中的声波理论，既是理解各类管道声现象的基础，又关乎扬声器、
+换能器和乐器等声学器件的设计。诚然，比之直管甚至突变截面管，即使满足
+长波近似，变截面管声传播问题也仍然要复杂得多。不过，若截面满足缓变的假设，
+则管内声场可按准平面波近似，相关数学分析大为简化。本文阐述缓变截面管内声
+传播的基本理论，着重探讨准平面波近似的条件，以及有关数学分析方法和技巧。
+
+
+\emph{正文}\
+设管道横截面$S$是轴向坐标$x$的连续函数$S(x)$。
+因截面连续可变，管壁切向不再与$x$轴平行，切角连续可变，遂使与管壁垂直
+的波阵面呈曲面状\footnote{因刚性壁上的法向速度为零，流体质点只能沿壁面（
+切向）振动。又质点速度与波正面正交，故理想流体中波阵面始终与刚性
+壁面正交。}，
+不再与横截面$S$重合。
+波阵面面积$\sigma(x)$也连续可变，但$\sigma(x)\neq S(x)$，如图
+(\ref{fig:slowvar_mod})所示。
+而且，管内轴向传播声波的声场有可能横向分布，不再是一维。
+只有若截面$S$缓变，且波长远大于横截面线度，管内声场近乎一维（准一维，
+quasi-one dimensional），波阵面$\sigma$上声学量处处相等。
+如此，看似复杂的问题仍可约化为一维声波传播问题。
+
+\begin{figure}[h]
+	\label{fig:slowvar_mod}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/duct/slowlyVaryingPipe.jpg}
+	\caption{缓变截面管道模型}
+\end{figure}
+
+\subsection{何谓缓变？}
+如图(\ref{fig:slowvar_mod})所示的连续变截面管中，管道横截面积和声波波阵面面积皆为管轴向坐标$x$
+的函数：
+\begin{equation}
+	S=S(x)\qc \sigma = \sigma (x)
+\end{equation}
+因波阵面与管壁正交（壁上法向速度为零），波阵面的面积
+$$
+\sigma = \iint_\sigma \dd{\sigma} = \iint_\sigma 
+\frac{1}{\cos \phi} \dd{S} < \iint_\sigma \frac{1}{\cos\phi_w}\dd{S}
+=\frac{S}{\cos\phi_w}$$
+其中$\phi$为波阵面法向与管轴的夹角，$\phi_w$为管壁的切角（$\phi<\phi_w$）。
+于是，
+缓变指横截面线度是$x$的缓慢变化的函数，所以
+\footnote{如管横截面成圆形，则横截面积的平方正比管半径$R(x)$
+	$\tan\phi_w = \dv*{R}{x}$。}
+$$
+\tan \phi_w \propto \dv{x} \sqrt{S} = O(\eps)
+$$
+$$\cos \phi_w = \dfrac{1}{\sqrt{1+\tan^2 \phi_w}} = 1+O(\eps^2)
+$$
+其中$\eps$描述管截面变化的程度。缓变意味着$0<\eps \ll 1$。结果
+\begin{equation}
+	\label{eq:slowvar_approx}
+	\sigma = S\qty[1+O(\eps^2)] \xrightarrow{\ln} \ln \sigma = 
+	\ln S+O(\eps^2) \xrightarrow{\dv{x}} \frac1\sigma \dv{\sigma}{x}
+	=\frac1S \dv{S}{x}  + O(\eps^2)
+\end{equation}
+
+因此，在缓变条件下，$\sigma \approx S$，且$(1/\sigma ) \dv*{\sigma}{x}
+\approx (1/S)\dv*{S}{x}$。
+
+\subsection{缓变声管中的声波方程}
+回到原坐标$x$，并考察如上图所示由两个相距$\dd{x}$的波阵面所围的小区域$
+\Delta V=\sigma \dd{x}$。在此域内对连续性方程作体积分：
+$$
+0 = \iiint_{\Delta V} \qty[\pdv{\rho}{t} + \div(\rho\vb{v})] \dd{V}
+=\iiint_{\Delta V} \pdv{\rho}{t} \dd{V} + \iint_{\Delta V}\div (\rho \vb{v})
+\dd{V}
+$$
+
+$$
+\xrightarrow{\text{apply Gauss's Theorem}} \dv{t} \qty(\dd{x} \int_{\sigma
+(x)} \rho \dd{\bm{\sigma}}) + \int_{\sigma (x+\dd{x})} 
+\rho \vb{v}\vdot \dd{\bm{\sigma}} - \int_{\sigma(x)} \rho\vb{v} \vdot \dd
+\bm{\sigma} = 0
+$$
+
+$$
+\xrightarrow{\displaystyle f(x+\dd{x})-f(x) = \dv{f}{x} \dd{x}} 
+\dv{t} \qty(\iint_{\sigma(x)} \rho \dd{\bm{\sigma}}) \dd{x}
++\pdv{x} \qty(\iint_{\sigma(x)} \rho \vb{v} \vdot \dd{\bm{\sigma}})\dd x
+=0
+$$
+
+一般认为，运动与状态量（如密度$\rho$）、以及声学量在波阵面$\sigma$上是常数。
+因此，上式中的密度$\rho$可从积分号下取出，而得到管内连续性方程的一维形式：
+$$
+\pdv{\rho}{t} +\frac1\sigma \pdv{x} (\rho U) = 0\qc \qty(U = \iint_\sigma
+\vb{v}\vdot \dd{\bm{\sigma}} = v\sigma) = 0$$
+其中$U$为经过波阵面的体积流，为横轴坐标$x$的函数。
+因波阵面上速度$v$恒常，垂直波阵面法向，故$U=v\sigma$。
+管内运动方程和状态方程一如理想流体者。
+经小振幅线性化，连续性方程、运动方程和状态方程依次可近似为：
+$$
+\begin{cases}
+	\displaystyle \pdv{\rho'}{t} +\rho_0 \frac1\sigma \pdv{x}(\sigma v) = 0\\[1em]
+\displaystyle \rho_0\pdv{v}{t} = -\pdv{p}{x}\\
+p = c_0^2 \rho'
+\end{cases}
+$$
+其中$\rho'$为管内密度扰动量，$\rho_0$为静态密度，$p(x)$为声压。
+消去$\rho'$和$v$，得一维声压波动方程，
+\begin{equation}
+	\label{eq:slowvar_sigmawe}
+	\frac1\sigma \pdv{x} \qty[\sigma \pdv{p}{x}]
+	-\frac{1}{c_0^2} \pdv[2]{p}{t} =0
+\end{equation}
+然而，与横截面面积$S$不同，波阵面面积$\sigma$难于获得。
+为克服困难，把第一项展开，并应用缓变近似(\ref{eq:slowvar_approx})，
+$$
+\frac{1}{\sigma}\dv{\sigma}{x} \pdv{p}{x}
++\pdv[2]{p}{x} \approx \frac1S \dv{S}{x} \pdv{p}{x}
++\pdv[2]{p}{x} =\frac1S \pdv{x}(S\pdv{p}{x})$$
+如此，方程(\ref{eq:slowvar_sigmawe})可近似为
+$$
+\frac1S \pdv{x} \qty[S\pdv{p}{x}] -\frac{1}{c_0^2}
+\pdv[2]{p}{t} = 0
+$$
+对于频率$\omega$、波数$k$的时间简谐的声波，此方程简化为
+\begin{equation}
+	\label{eq:slowvar_helmeq}
+	\frac1S \pdv{x}\qty(S\pdv{p}{x}) +k^2p = 0
+	\qor
+	\pdv[2]{p}{x}+\dv{\ln S}{x} \pdv{p}{x}+k^2p=0
+\end{equation}
+此乃变系数二阶常微分方程\footnote{此方程与密度非均匀媒质的声波方程（一维）
+一致，只要互换$1/S$和$\rho$即可。}。
+
+若把$p$当作「位移」，$x$视为「时间」，$k$视为「固有频率」，方程
+(\ref{eq:slowvar_helmeq})岂非质点阻尼振动方程？
+只不过，此处阻尼系数$\dv*{\ln S}{x}$是「时间」$x$的函数，且可正可负。
+若恰好「阻尼系数」为常数，则方程(\ref{eq:slowvar_helmeq})乃常系数二阶常
+微分方程，其解当为人所熟知。
+此要求横截面$S$按指数形变化。
+
+若$\dv*{\ln S}{x}$非常数，求解方程(\ref{eq:slowvar_helmeq})殊非易事，需借助
+适当的数学方法。
+对方程(\ref{eq:slowvar_helmeq})作函数变换：
+\begin{equation}
+	\label{eq:slowvar_ppsi}
+	p(x,t) = \frac{\Psi(x,t)}{R(x)}\qc \qty(R=\sqrt{\frac{S}{S_0}})
+\end{equation}
+其中$S_0$为某参考面积。波函数$\Psi(x,t)$满足二阶常微分方程：
+\begin{equation}
+	\label{eq:slowvar_psi}
+	\pdv[2]{\Psi}{x} +\qty[k^2-u(x)]\Psi=0
+\end{equation}
+其不含波函数一阶导数项，而变参数$u(x)$定义为
+\begin{equation}
+	\label{eq:slowvar_u}
+	u(x) \equiv \frac{1}{R(x)} \dv[2]{x} R(x)
+\end{equation}
+它由管横截面$S$确定。反之，若按设计给定$u(x)$，则可以通过以下二阶常微分方程
+\begin{equation}
+	\dv[2]{R}{x} - u(x)R=0
+\end{equation}
+反求符合设计要求的横截面$S(x)$。
+方程(\ref{eq:slowvar_psi})是标准的Sturm-Liouville型问题，对于诸多形式的
+$u(x)$，存在解析解。
+在量子力学中它描述电子穿越势垒（势阱）的量子散射问题，$u(x)$是势函数。
+
+\subsection{典型缓变截面管及其声场}
+存在$u(x)$恰为常数的特殊情形，数学处理极其简单，无须求助复杂的数学方法。
+记
+$$u=\mu^2$$
+如此，立刻得到方程(\ref{eq:slowvar_psi})的解：
+\begin{equation}
+	\label{eq:slowvar_psipm}
+	\Psi_\pm = \Psi_{\mathrm{a},\pm} \me^{\mj(\omega t\mp \gamma x)}
+	\qc \qty(\gamma = \sqrt{k^2-\mu^2})
+\end{equation}
+其中「$\pm$」表示分别沿管轴正向和反向传播。
+此声波解存在\emph{截止频率}：
+$$
+f\st{cutoff} = \frac{\mu c_0}{2\uppi}
+$$
+当频率低于此频率时，声波是沿管轴指数衰减（增长）的。
+欲使$u$恰为此常数，按(\ref{eq:slowvar_u})，$R$只能取如下形式
+
+\begin{subequations}
+	\label{eq:slowvar_R}
+	\begin{align}
+		R & = 1+\frac{x}{x_0}\\
+		R& = R_0 \me^{\pm \mu(x-x_0)} \label{eq:slowvar_Rexp} \\
+		R&=a\cosh \mu x +b\sinh \mu x \label{eq:slowvar_Rcat}\\
+		R& = a\cos \kappa x + b\sin \kappa x\qc (\mu = \mj \kappa)
+	\end{align}
+\end{subequations}
+
+\begin{itemize}
+	\item 锥形（$\mu=0$）：式中$x_0$为任意常数，表征号筒的扩展程度。
+	\item 指数形（$\mu>0$）：式中$R_0$表征$x=x_0$处号筒的大小。
+	\item 悬链线形（$\mu>0$）：式中$a$和$b$是任意常数。
+	\item 正弦形（$\mu$是纯虚数）。
+\end{itemize}
+
+前三者分别对应于三种典型的声学号筒（horn）：锥形、指数形和悬链线形
+\footnote{公式(\ref{eq:slowvar_u})中的$u$也可取负的常数值，所得
+的$R$呈余弦或正弦形，不过声学上无多大实用意义，故本文不予考虑。}。
+把式(\ref{eq:slowvar_psipm})和式(\ref{eq:slowvar_R})代入式(
+\ref{eq:slowvar_ppsi})，获得号筒声压通解，再根据谐波速度与声压的一般关系
+$$
+v=-\frac{1}{\mj k\rho_0c_0} \dv{p}{x}
+$$
+可获得速度解。
+
+\subsubsection{指数号筒}
+不失一般性，设指数号筒函数(\ref{eq:slowvar_Rexp})中的$x_0=0$。
+无限长号筒的正向行波解为
+\begin{equation}
+	\begin{cases}
+		p = p\st{a}\me^{-\mu x+\mj(\omega t \mp \gamma x)}\\
+		v = v\st{a} \me^{-\mu x + \mj (\omega t\mp \gamma x)}
+	\end{cases}
+	\qc 
+	\qty(v\st{a} = \frac{p\st{a}}{\rho_0c_0} \me^{-\mj \theta}\qc
+	\tan\theta = \frac{\mu}{\gamma})
+\end{equation}
+号筒任意横截面处的声阻抗
+\begin{equation}
+	Z\st{a}(x) = \frac{p}{U} = \frac{p}{S(x)v}
+	=\frac{\rho_0c_0}{S(x)} \me^{\mj \theta}
+\end{equation}
+而声阻抗率是常数。辐射声功率
+$$
+W = \frac12 \Re(p^* U)|_{x=0}
+=\frac{1}{2} \Re(Z\st{a}|_{x=0}) |U|_{x=0}^2
+=\frac12 \rho_0 c_0 S_0 \cos\theta |v\st{a}|^2
+$$
+在截止频率处$\theta =\uppi /2$，辐射功率为零\footnote{在截止频率下，$k<\mu$
+	声场解为
+	$$
+	\begin{cases}
+		\displaystyle p &\displaystyle =p\st{a} \me^{\displaystyle
+			-\mu x - \sqrt{\mu^2-k^2}x+\mj \omega
+	t}\\
+	\displaystyle v&\displaystyle =-\frac{1}{\mj k\rho_0c_0} \pdv{p}{x}
+	=\frac{\mu+ \sqrt{\mu^2-k^2}}{\mj k} \frac{p}{\rho_0c_0}
+	\end{cases}
+$$
+其声阻抗为
+$$Z\st{a} = \frac{\rho_0c_0}{S(x)} \frac{\mj k}{\mu +\sqrt{\mu^2-k^2}}
+=\frac{\rho_0c_0}{S(x)} \frac{\mj \omega}{\omega\st{cutoff}+\sqrt{\omega\st{cutoff}^2}
+-\omega^2}
+=\mj \omega M\st{a}
+$$
+$$
+\qty(\displaystyle M\st{a} = \frac{1}{\omega\st{cutoff}+\sqrt{\omega\st{cutoff}^2-\omega^2}}
+\frac{\rho_0c_0}{S(x)}\qc 
+\omega\st{cutoff}=2\uppi f\st{cutoff})$$
+这是一个声质量抗，声质量为$M\st{a}$。
+}。
+当高于截止频率时，$\cos \theta \approx 1$，辐射功率相近乎大活塞的，效率很高
+。
+
+
+\subsubsection{悬链线号筒}
+悬链线号筒取式(\ref{eq:slowvar_Rcat})中的$\cosh$型最为合理自然。
+同样设$x_0=0$，无限长悬链线号筒的解为：
+\begin{equation}
+	\begin{cases}
+	p&=p\st{a}\sech \mu x \ \me^{\mj (\omega t-\gamma x)}\\
+	\rho_0 c_0 v & = p\st{a} \sech \mu x\ \frac{
+	\cosh (\mu x-\mj \theta)}{\cosh \mu x} \me^{\mj(\omega t-\gamma x)}
+	\end{cases}
+	\qc 
+	\qty(\tan \theta = \frac{\mu}{\gamma })
+\end{equation}
+
+\begin{equation}
+	\frac{p}{v} = \rho_0c_0 \frac{\cosh \mu x}{\cosh (\mu x-\mj \theta)}
+	\xrightarrow{x\to 0} \frac{\rho_0c_0}{\cos\theta}
+\end{equation}
+在喉口（$x=0$）处的声阻抗
+$$Z\st{a}|_{x=0} = \frac{\rho_0c_0}{S_0\cos\theta}$$
+为纯声阻，辐射效率很高。辐射声功率
+$$W = \frac12 \Re (p^*U) = \frac{1}{2}\frac{\rho_0c_0S_0}{\cos\theta}
+|v\st{a}|^2$$
+若喉口振速恒定，则当频率接近截止频率时，辐射功率达无穷大，辐射效率极高。
+此特性正与指数号筒相反。
+
+
 \end{document}
