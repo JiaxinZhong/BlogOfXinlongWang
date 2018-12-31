@@ -42,6 +42,114 @@
 具有质量}，可视为流体的宏观「分子」（犹如可变形的流体微粒）。
 无数质点的运动遂构成了流体的运动。
 
+本文仅考察理想液体，即无黏性、无热导损耗（绝热）的流体。
+
+\subsection{流场描述}
+三维流体空间中，每个流体质点在每个时刻$t$均有其可观测的确定位置，用位置
+矢量$\vb{r}$描述。
+在Cartesian坐标系中，$\vb{r}=(x,y,z)$，其中$x$、$y$和$z$是$\vb{r}$在此坐标
+系中的三个分量。
+显然，某质点的位置矢量$\vb{r}$不仅随时而变，而且取决于其初始时刻$t=t_0$的
+位置$\vb{R}=(a,b,c)$，即$\vb{r}$是初始位置$\vb{R}$和时间$t$的多元函数：
+\begin{equation}
+	\vb{r} = \vb{r}(\vb{R},t)\qor 
+	\begin{dcases}
+		x&=x(a,b,c,t)\\
+		y&=y(a,b,c,t)\\
+		z&=z(a,b,c,t)
+	\end{dcases}
+\end{equation}
+
+流速$\vb{v}$是流体质点的运动速度（velocity），定义为质点位置矢量$\vb{r}$
+的时间变化率：
+$$\vb{v}=\dv{\vb{r}}{t} = \qty(\dv{x}{t}, \dv{y}{t},\dv{z}{t}) =
+\vb{v}(\vb{R},t)$$
+
+在直角坐标系中，$\vb{v}=\qty(v_x,v_y,v_z)$具有3个分量：
+$v_x = \dv*{x}{t}$、$v_y=\dv*{y}{t}$和$v_z=\dv*{z}{t}$。
+与位置矢量$\vb{r}$一样，流速$\vb{v}$也是初始位置$\vb{R}$和时间$t$的函数。
+流速描述了流体的运动状态。
+除此之外，尚需诸如压力$P$（pressure）、密度$\rho$（density）、温度$T$
+（temperature）等其它物理量，以全面描述流体的状态。
+然而，根据热力学（thermodynamics）理论，\emph{一般仅需两个独立的热力学状态
+	变量即可完全描述流体的热力学状态}，余者悉可经状态方程确定。
+
+上述这种描述中，流体的状态物理量表为质点初始位置$\vb{R}$和时间$t$的函数：
+\begin{subequations}
+\begin{align}
+		\vb{v} = \vb{v}(\vb{R},t)\qc P = P(\vb{R},t)\qc \rho = \rho(\vb{R},
+		t),\label{eq:fluid_v_a}\\
+		\label{eq:fluid_v_b}
+		\vb{v} = \vb{v}(\vb{r},t)\qc P = P(\vb{r},t)\qc \rho = \rho(\vb{r},
+		t)
+\end{align}
+\end{subequations}
+这种描述方法在流体力学中被称为拉格朗日描述（Lagrange description）。
+\emph{Lagrange描述视流体的运动为无数质点运动的集合，并试图「跟踪」（trace）
+	每一个质点的轨迹（trajecotry）。}
+这种描述体现了机械运动的确定论观（determinism），一旦测得某质点在某时刻的位
+置$\vb{R}$及其状态信息，则该质点在任意时刻$t$的状态性质尽可通过式(\ref{eq:fluid_v_a})获知。
+时刻$t=t_0$的位置矢量$\vb{R}$不仅作为每个流体质点的「标记」，而且也作为
+Lagrange描述体系下的坐标。
+因$\vb{R}$其实是流体质点的初始位置，故在Lagrange坐标系中状态量对时间的全
+导数（full derivatives）等同于时间偏导数（partial derivatives），例如：
+$$\dv{t} \vb{r}(\vb{R},t) = \pdv{t} \vb{r}(\vb{R},t)\qc 
+\dv{t} \vb{v}(\vb{R},t) = \pdv{t} \vb{v} (\vb{R},t)$$
+
+比之Lagrange描述，Euler描述在流体力学中更常用、更方便。
+\emph{Euler描述重在当前$t$时刻流体状态在空间$\vb{r}$的分布}，即式(\ref{eq:fluid_v_a})。
+所以，这是一种场（field）---流场---的描述方法。
+\emph{在此描述中，位置矢量$\vb{r}$仅被视为与时间完全无关的独立变量。}
+然而，追根溯源，位于$\vb{r}$处的流体质点是初始时刻$t_0$从$\vb{R}$处迁移而
+来，即$\vb{r}=\vb{r}(\vb{R},t)$，故而上述两种描述以如下方式关联：
+\begin{equation}
+	\begin{dcases}
+		\vb{v}(\vb{R},t) & = \vb{v}\qty(\vb{r}(\vb{R},t),t)\\
+		{P}(\vb{R},t) & = P\qty(\vb{r}(\vb{R},t),t)\\
+		{\rho}(\vb{R},t) & =\rho\qty(\vb{r}(\vb{R},t),t)\\
+	\end{dcases}
+\label{eq:fluid_correlation}
+\end{equation}
+因此两种描述，就有两种不同意义的状态变量时间变化率。
+其一是\emph{（被视作流体微粒的）质点的状态时间变化率，即Lagrange描述下的时间变化率。}
+它反映了质点本身在其运动过程中的时间变化，质点速度（流速）$\vb{v}$即为典型。
+其二是\emph{空间某固定点$\vb{r}$的时间变化率，即Euler描述下的时间偏导数}，例如：
+$$
+\pdv{t}\vb{v}(\vb{r},t)\qc 
+\pdv{t}P(\vb{r},t)\qc 
+\pdv{t}\rho(\vb{r},t)
+$$
+其中，位置矢量$\vb{r}$被视为独立的空间变量，与时间无关。
+其实，这两种时间变化率分别是Lagrange和Euler描述下状态量的时间导数。
+
+两种时间变化率是相互关联的。
+观察式(\ref{eq:fluid_correlation})便知，\emph{Lagrange描述下的时间变化率
+等于Euler描述下的时间全导数}（专用微分符号$\dv*{t}$表示之）。
+所以，欲求Euler描述下的Lagrange意义下的时间变化率，求时间导数时必须顾及
+空间变化量$\vb{r}=(x,y,z)$本身是时间的函数。比如，
+\begin{align*}
+	\dv{t} \rho(\vb{r},t) & = \pdv{t}\rho (\vb{r},t)+\dv{x}{t} \pdv{x}
+	\rho(\vb{r},t) +\dv{y}{t} \pdv{y} \rho(\vb{r},t)+\dv{z}{t} \pdv{z} \rho
+	(\vb{r},t)\\
+	&=\pdv{t}\rho(\vb{r},t) + (\vb{v}\vdot \grad)\rho(\vb{r},t)\\
+	&=\qty(\pdv{t} + \vb{v}\vdot \grad )\rho (\vb{r},t)
+\end{align*}
+式中，三维梯度算符
+$$\grad \equiv \qty(\pdv{x}, \pdv{y}, \pdv{z})$$
+由此可见，在Euler描述的时间全导数与偏导数存在如下的微分算符关系
+\begin{equation}
+	\dv{t} = \pdv{t} + \vb{v}\vdot \grad
+\end{equation}
+等式右端的第一项是空间固定点的导数，称为\emph{本地时间导数}（即Euler描述
+下的时间变化率）；而第二项是流动而产生的时间变化率贡献，称为\emph{对流导数}。
+
+
+\subsection{理想流体运动的基本方程}
+\subsubsection{连续性方程}
+设$V$是流体空间某任意（但大小开关固定）的体积
+
+TBD
+
 \section{声学量的复数运算\\
 Complex Operations for Acoustical Quantities}
 
@@ -402,6 +510,7 @@ $$
 $k_1\sin\theta\st{i} = k_2\sin\theta\st{t}$，这一结论对任意入射皆成立。
  
 
+
 \chapter{声波在管中的传播}
 
 \section{缓变截面管内的声传播\\
@@ -688,5 +797,54 @@ $$W = \frac12 \Re (p^*U) = \frac{1}{2}\frac{\rho_0c_0S_0}{\cos\theta}
 若喉口振速恒定，则当频率接近截止频率时，辐射功率达无穷大，辐射效率极高。
 此特性正与指数号筒相反。
 
+TBD
+
+\chapter{声波的辐射}
+
+% green
+\section{点声源与Grenn函数\\
+Point Sources of Sound and Green Functions}
+
+\emph{摘要}\ 
+Green函数反映声场的基本结构，也是单位源强的点声源所辐射的声场。
+已知Green函数，就可通过积分法获取声场的解析表示。
+可见Green函数之于声场之重要性。
+然而，在有界媒质空间，因与边界作用之故，点声源辐射问题远较无界空间的复杂。
+仅当边界开关及声学性质相对简单的少数情形，才有可能获得封闭的解析解。
+多数情形下，最多只能按声场简正模式正交展开的级数解。
+本文首先概述基于Green函数的声场积分表示，然后简述若干重要情形的点声源辐射
+场（即Green函数）的求解。
+
+\subsection{点声源与Green函数}
+设流体空间积分为$V$、边界为$\Sigma$、声特性阻抗率为$\rho_0c_0$，其中在
+$\vb{r}_0=(x_0,y_0,z_0)\in V$处存在一点声源，源强为$Q_0$。
+点声源犹质点，是数学抽象，其源函数$q(\vb{r})$可表为：
+$$q(\vb{r}) = Q_0 \delta(\vb{r}-\vb{r}_0)\qc
+\qty(\vb{r},\vb{r}_0\in V\qc Q_0 = \iiint_V q(\vb{r})\dd V)$$
+其中$\vb{r}=(x,y,z)\in V$是声场内的观察点的位置，三维Dirac-$\delta$函数
+$\delta(\vb{r}-\vb{r}_0)= \delta(x-x_0)\delta(y-y_0)\delta(z-z_0)$。
+不妨设此点声源的源强$Q_0=1$，并假设$\Sigma$是阻抗型的边界，故所辐射的声场
+速度势$G$满足如下的\emph{有源波动方程}和\emph{边界条件}：
+\begin{subequations}
+	\begin{align}
+		\qty(\laplacian + k^2)G(\vb{r};\vb{r}_0) & = \delta (\vb{r}-\vb{r}_0)
+		\qc \qty(\vb{r},\vb{r}_0\in V)\\
+		\qty(\pdv{n} +\mj k \eta )G(\vb{r};\vb{r}_0) & = 0 
+		\qc \qty(\vb{r},\vb{r}_0\in \Sigma)\label{eq:green_boundary}
+	\end{align}
+	\label{eq:green_boundaryProblem}
+\end{subequations}式中，$k$是声波波数，$\eta$是边界$\Sigma$的声导纳比，由$\Sigma$的法向声阻抗
+率$z\st{n}$定义：$\eta\equiv \rho_0c_0/z\st{n}$。
+$\eta$有两种可能的极端：$\eta=0$的刚性边界和$\eta=\infty$的绝对软边界。
+根据方程(\ref{eq:green_boundary})在绝对软边界条件下必有$G=0$，即边界上的
+声压为零（稳态场的声压正比于速度势）。
+数学上，边值问题(\ref{eq:green_boundaryProblem})的解$G$就是有界空间的Green
+函数，它即是观察点$\vb{r}\in V$的函数，也与源点$\vb{r}_0 \in V$有关，故特
+写成$G(\vb{r};\vb{r}_0)$的函数形式。
+可以证明，\emph{Green函数$G$具有互易性}：
+$$G(\vb{r}_2;\vb{r}_1) = G(\vb{r}_1;\vb{r}_2)$$
+
+
+TBD
 
 \end{document}
