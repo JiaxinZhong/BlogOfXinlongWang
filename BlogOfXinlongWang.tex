@@ -1,15 +1,16 @@
 \documentclass[UTF8]{ctexbook}
 
+\usepackage{scigeneral}
 % SCI book 的模板 sty，适用于中文
 \usepackage{scibookchn}
-\usepackage{scigeneral}
+
+\interfootnotelinepenalty=10000
 
 \title{王新龙声学博文}
 
 % start each section on a new page
-\let\stdsection\section
-\renewcommand\section{\newpage\stdsection}
-
+% \let\stdsection\section
+% \renewcommand\section{\newpage\stdsection}
 
 \begin{document}
 
@@ -139,6 +140,7 @@ $$\grad \equiv \qty(\pdv{x}, \pdv{y}, \pdv{z})$$
 由此可见，在Euler描述的时间全导数与偏导数存在如下的微分算符关系
 \begin{equation}
 	\dv{t} = \pdv{t} + \vb{v}\vdot \grad
+	\label{eq:fluid_dt}
 \end{equation}
 等式右端的第一项是空间固定点的导数，称为\emph{本地时间导数}（即Euler描述
 下的时间变化率）；而第二项是流动而产生的时间变化率贡献，称为\emph{对流导数}。
@@ -146,9 +148,214 @@ $$\grad \equiv \qty(\pdv{x}, \pdv{y}, \pdv{z})$$
 
 \subsection{理想流体运动的基本方程}
 \subsubsection{连续性方程}
-设$V$是流体空间某任意（但大小开关固定）的体积
+设$V$是流体空间某任意（但大小形状固定）的体积，其中所含流体的质量是
+$$\iiint_V \rho(\vb{r},t)\dd x \dd y \dd z$$
+盖因流动，流体必经$V$的封闭曲面$S$流入或流出。
+考察$S$上的某有向面元$\dd \vb{S} = \vb{n} \dd S$其中$\vb{n}$是$\dd \vb{S}$
+面元的单位法向矢量。
+单位时间内经$\dd \vb{S}$流出的流体体积是$(\vb{v}\vdot \vb{n}) \dd{S}=
+\vb{v}\vdot \dd \vb{S}$，故流出的质量是$\rho \vb{v}\vdot \dd \vb{S}$。
+对整个封闭曲面$S$积分，
+$$\oiint_S \rho\vb{v}\vdot \dd \vb{S}$$
+就得到单位时间内经封闭表面$S$流出的质量（面积分值为正表示净流出的流体，为
+负表示净流入的）。
+被各函数$\rho \vb{v}$是一个矢量，谓之流体的质量能量密度矢量，其方向与流速
+$\vb{v}$一致，其量值等于单位时间内流经与流速$\vb{v}$相垂直的单位面积的流体
+质量。
+除了质量能量密度矢量之意外，$\rho \vb{v}$还具有单位体积流体动量之意（见下文
+动量守恒部分）。
+根据质量守恒定律，若体内元流源，则经边界$S$流出的质量必然导致单位时间内$V$
+内质量的减少，即
+$$\oiint_S \rho \vb{v}\vdot \dd{\vb{S}} = -\pdv{t} \iiint_V \rho \dd x\dd
+y\dd z$$
+等式右端的时间偏导数意谓单位时间内的增长率，而前面取负号则表示减小率。
+前已假定，体积$V$在空间固定，故右端的时间导数可直接移入体积分号内。
+进一步对左端的封闭曲面积分应用Gauss定理，并合并俩积分，则上式化为如下体
+积分：
+$$\iiint_V\qty[\pdv{\rho}{t} +\div{(\rho\vb{v})}]\dd x \dd y \dd z=0$$
+
+因体积$V$大小任意，故体积分下的被积函数必等于零：
+\begin{subequations}
+	\begin{align}
+		\pdv{\rho}{t} +\div(\rho\vb{v}) & = 0,\\
+		\dv{\rho}{t} + \rho \div\vb{v} &= 0,\label{eq:fluid_continuityB} \\
+		\pdv{\rho}{t} + \div (\rho \vb{v}) & = \rho q(\vb{r},t)\label{eq:fluid_continuityC}
+	\end{align}
+	\label{eq:fluid_continuity}
+\end{subequations}
+此即质量的连续性方程，通常谓之\emph{连续性方程}（equation of continuity）。
+可见，连续性方程是质量守恒定律之数学表述。
+应用人气周知的散度公式：$\div (\rho\vb{v}) = \vb{v} \vdot \grad \rho +
+\rho \div{\vb{v}}$，并把算符公式(\ref{eq:fluid_dt})应用于密度$\rho$的时间
+导数，则连续性议程也可写成如式(\ref{eq:fluid_continuityB})的等价形式。
+
+易把连续性方程(\ref{eq:fluid_continuity})推广到有质量产生的情形。
+设单位体各的流体在单位时间内产生的流体质量是$\rho q(\vb{r},t)$（$q$是流体
+的体积生成率），则根据质量守恒定律不难导出式(\ref{eq:fluid_continuityC})。
+
+
+\subsubsection{Euler方程}
+仍考虑固定形状大小的流体体积$V$。
+若无其它外力，则作用在此体积上的外力仅仅是在包围$V$的封闭曲面$S$上所受的压力
+的总和：
+$$-\oiint_S P\dd\vb{S} = -\iiint_V \grad P \dd x \dd y \dd z$$
+其中的等式已经利用了针对标量的封闭曲面面积分Gauss定理。
+须注意，流体的压力总与边界面的外法向相反，垂直界面指向流体内部，故上式取
+负号。
+上式的等式表明，单位体积的流体质点受到压力：$-\grad P$。
+而单位体积的流体质点的质量是$\rho$，所以根据牛顿第二定律得到如下运动方程
+（equation of motion）
+\begin{equation}
+	\rho \dv{\vb{v}}{t} = -\grad P
+	\label{eq:fluid_eulera}
+\end{equation}
+其Cartesian坐标的分量形式
+$$\rho \dv{v_x}{t} = -\pdv{P}{x}\qc \rho \dv{v_y}{t} = -\pdv{P}{y}\qc
+\rho \dv{v_z}{t} = -\pdv{P}{z}$$
+再次强调，因牛顿定律是针对质点而言的，上式左端的流速导数是质点的加速度，即
+流速$\vb{v}$的时间全导数。
+根据全导数与偏导数的关系式(\ref{eq:fluid_dt})，运动议程又可表达成
+\begin{equation}
+	\pdv{\vb{v}}{t} +\vb{v}\vdot \grad \vb{v} = -\frac1\rho \grad P
+	\label{eq:fluid_eulerb}
+\end{equation}
+式中流速$\vb{v}$的梯度
+$$\grad \vb{v} \equiv \qty(\pdv{\vb{v}}{x}, \pdv{\vb{v}}{y},\pdv{\vb{v}}{z})
+$$
+是矢量的矢量 --- --- 张量，具有9个分量。
+或者，方程(\ref{eq:fluid_eulerb})也可以写成分量的形式
+$$
+\begin{dcases}
+	\pdv{v_x}{t} + \vb{v}\vdot \grad v_x&=-\frac1\rho \pdv{P}{x},\\
+	\pdv{v_y}{t} + \vb{v}\vdot \grad v_y&=-\frac1\rho \pdv{P}{y},\\
+	\pdv{v_z}{t} + \vb{v}\vdot \grad v_z&=-\frac1\rho \pdv{P}{z}
+\end{dcases}
+$$
+此方程由Euler于1755年首次提出，是谓Euler方程（Euler Equation）。
+
+
+如果单位质量的流体还受到外力$\vb{g}$的作用，则Euler方程(\ref{eq:fluid_eulerb})
+右端尚需加上单位体积的外力$\rho \vb{g}$。
+两端均除以密度$\rho$，得到
+\begin{equation}
+	\pdv{\vb{v}}{t} + \vb{v}\vdot \grad \vb{v} =-\frac1\rho \grad P + \vb{g}
+	\label{eq:fluid_eulerc}
+\end{equation}
+若所受外力是重力，则$\vb{g}=-g\vu{e}_z$，其中$g$是重力加速度，$\vu{e}_z$
+指沿水平面垂直向上的单位矢量
+
+\subsubsection{状态方程}
+前已阐述，流体的状态不仅包括运动状态（$\vb{v}$），还包括诸如压力$P$、密度
+$\rho$等热力学状态量。
+设单位质量流体（或质点）的熵为$s$。
+熵$s$可表为压力$P$和密度$\rho$的状态函数：
+$$s = s(P,\rho)$$
+绝热过程不存在热量交换，故流体的熵守恒，其数学表示为：
+\begin{equation}
+	\dv{s}{t} = 0
+	\label{eq:fluid_sa}
+\end{equation}
+或根据公式(\ref{eq:fluid_dt})，有
+\begin{equation}
+	\pdv{s}{t} +\vb{v}\vdot \grad s = 0
+	\label{eq:fluid_sb}
+\end{equation}
+方程(\ref{eq:fluid_sa})表明，$s(P,\rho)=$常数，即流体的绝热过程是\emph{等
+	熵运动}。
+从中原则上可求得函数关系：
+\begin{equation}
+	P=P(\rho)
+\end{equation}
+
+设流体的温度为$T$，单位质量流体的焓为$h$。
+根据热力学的基本关系：
+\begin{equation}
+	\dd h = T\dd s + \frac1\rho \dd{P}
+\end{equation}
+
+可知，对于等熵运动（$\dd s=0$），存在如下关系：
+\begin{equation}
+		\dd h = \frac1\rho \dd{P}
+		\imp \grad h  = \frac1\rho \grad P\qc \qty(h=\int \frac{\dd P}{\rho}
+		)
+\end{equation}
+
+同时，应用矢量分析公式\footnote{
+矢量公式
+$$\frac12 \grad (\vb{v}\vdot \vb{v}) = \vb{v}\cp \qty(\curl \vb{v}) + 
+\qty(\vb{v}\vdot \grad)\vb{v}$$
+等式两端点积流速$\vb{v}$，并考虑到$\vb{v}\cp (\vb{v}\cp \vb{A}) = 0$（
+$\vb{A}$任意），遂有
+$$\frac12 \vb{v} \vdot \grad v^2 =   \vb{v}\vdot \qty(\vb{v}\vdot
+\grad)\vb{v}$$
+其中$v^2=\vb{v}\vdot \vb{v}$。}，
+则可把Euler方程(\ref{eq:fluid_eulerb})表达成：
+
+\begin{equation}
+	\pdv{\vb{v}}{t} +\grad \qty(\frac12 \vb{v}\vdot \vb{v} + \int\frac{
+	\dd P}{\rho} ) = \vb{v}\times\qty(\curl \vb{v})
+\end{equation}
+
+以上导出了Euler描述下理想流体的连续性方程(\ref{eq:fluid_continuity})、
+Euler（运动）方程(\ref{eq:fluid_eulera})(\ref{eq:fluid_eulerb})(\ref{eq:fluid_eulerc})，并简述了
+热力学状态方程(\ref{eq:fluid_sa})(\ref{eq:fluid_sb})。
+这些方程构成了Euler描述体系下理想流体的基本方程。
+至于基Lagrange描述的形式，参见《流体运动的Lagrange描述》一文。
+
+\subsection{动量和能量的连续性方程}
+\subsubsection{动量守恒}
+
+在连续性方程(\ref{eq:fluid_continuity})的两端乘以速度$\vb{v}$的$x$分量
+$v_x$，再与Euler方程(\ref{eq:fluid_eulera})的$x$分量相加，得到
+\begin{equation}
+	\pdv{(\rho v_x)}{t} + \div \qty[(\rho v_x)\vb{v}] = -\pdv{P}{x}
+	\label{eq:fluid_momentuma}
+\end{equation}
+为明了此方程的物理意义，特对此方程两端作被变截面$S$包围的任意体积$V$的体
+积分，
+\[
+	\pdv{t} \iiint_V \rho v_x \dd x \dd y \dd z +
+	\oiint_S \rho v_x \qty(\vb{v} \vdot \dd \vb{S}) 
+	= -\iiint_V \pdv{P}{x} \dd x \dd y \dd z
+\]
+其中等式左端的第二项面积分是利用Gauss定理的结果。
+若应用标量的Gauss定理，则等式右端实际上是
+$$
+	-\iiint_V \grad P \dd x \dd y \dd z
+	= -\oiint_S P \dd \vb{S}
+$$
+的$x$方向分量。
+因此，上列微分方程等价于如下的积分方程，
+$$
+	\pdv{t}\iiint_V \rho v_x \dd x \dd y \dd z
+	=-\oiint_S \rho v_x \qty(\vb{v}\vdot \dd \vb{S}) - \qty(\oiint_S
+	P \dd \vb{S})_x
+$$
+其中最后一项的括号外的下标表示$x$分量。
+方程左端的被积函数$\rho v_x$乃单位体积的流体动量在$x$方向的投影，而其体积分就是
+$V$内流体总却是在$x$方向的分量；
+右端第一个面积分是单位时间内经封闭曲面$S$流入的$x$方向动量，而第二个压力面积分是
+作用在$V$上的$x$方向总压力分量。
+因此，上列积分方程正是$x$分量动量守恒定律的积分表述，而方程(
+\ref{eq:fluid_momentuma})是$x$方向动量守恒的微分表述。
+同理，可以得到对应$y$和$z$分量的积分方程。
+合并三个分量积分方程，得到矢量形式的动量守恒积分方程表示，
+$$
+	\pdv{t}\iiint_V \rho \vb{v} \dd x \dd y\dd z = 
+	-\oiint_S \rho \vb{v} \qty(\vb{v} \vdot \dd \vb{S})
+	-\oiint_S P\dd\vb{S}
+$$
+方程左端的被积函数$\rho \vb{v}$乃单位体积的流体动量，而其体积分就是$V$
+内流体的总动量；
+右端第一个面积分是单位时间内经封闭曲面$S$流入的动量，而第二个压力面积分是
+作用在$V$上的总压力。
+对应的微分形式是
+\begin{equation}
+	\pdv{t} \qty(\rho \vb{v}) +
+\end{equation}
 
 TBD
+
 
 \section{声学量的复数运算\\
 Complex Operations for Acoustical Quantities}
@@ -201,16 +408,16 @@ $$z=xy =\Re(X)\Re(Y) = \Re(\Re(X)Y)=\Re(X\Re(Y))$$
 复数表示对于简谐声学量的计算尤其有效。假设与时间$t$的依赖关系为$\exp(\mj 
 \omega t)$，其中$\omega = 2\uppi /T$为频率，$T$是振动周期，$\mj$是虚数单位
 。例如，$X$和$Y$是时间简谐的复量
-$$X=X\st{a} \me^{\mj \omega t }\qc Y = Y\st{a}\me^{\mj \omega t}$$
-其中，$X\st{a}$和$Y\st{a}$分别为$X$和$Y$的复振幅，是与时间$t$无关的常数。
+$$X=X\subt{a} \me^{\mj \omega t }\qc Y = Y\subt{a}\me^{\mj \omega t}$$
+其中，$X\subt{a}$和$Y\subt{a}$分别为$X$和$Y$的复振幅，是与时间$t$无关的常数。
 则有
 $$\dd{X}{t}=\mj \omega X\qc \int X\dd{t} = \frac{X}{\mj \omega}$$
 根据(\ref{eq:complexop_Z})，此时乘积$z=xy$的复数表达式为
-$$Z=\frac12 X\st{a}^* Y\st{a}+\frac12 X\st{a}Y\st{a}\me^{2\mj \omega t}$$
+$$Z=\frac12 X\subt{a}^* Y\subt{a}+\frac12 X\subt{a}Y\subt{a}\me^{2\mj \omega t}$$
 上式第二项有时间依赖关系$\exp(2\mj \omega  t)$，描述了乘积量$z$的瞬态运动。
 这是一个二次谐波（频率$2\omega$），其周期平均为零。第一项是与时间无关的
 「直流」项，等于复量$Z$的周期平均值：
-$$\bar{Z} = \frac1T \int_0^T Z(t) \dd{t} = \frac12 X\st{a}^* Y\st{a} =
+$$\bar{Z} = \frac1T \int_0^T Z(t) \dd{t} = \frac12 X\subt{a}^* Y\subt{a} =
 \frac12 X^* Y$$
 所以，乘积量$z=xy$的周期均值为
 $$\bar{z}=\frac1T \int_0^T z\dd{t} = \overline{\Re(Z)} = \Re(\bar{Z})
@@ -226,20 +433,20 @@ $$\bar{z}=\frac1T \int_0^T z\dd{t} = \overline{\Re(Z)} = \Re(\bar{Z})
 以下以若干典型振动与声学量为例，说明复数运算的应用。
 
 \subsubsection{单振子周期平均能量}
-设有质量为$M\st{m}$、弹性系数为$K\st{m}$的单振子，其质点的位移为$x$，速度
+设有质量为$M\subt{m}$、弹性系数为$K\subt{m}$的单振子，其质点的位移为$x$，速度
 $v$，对应的复位移为$X$，复速度为$V$。单振子的势能和动能分别为
-$$E\st{p} = \frac12 K\st{m} x^2 = \frac12 K\st{m}\qty[\Re(X)]^2$$
-$$E\st{k} = \frac12 M\st{m} v^2 = \frac12 M\st{m} \qty[\Re(V)]^2$$
+$$E\subt{p} = \frac12 K\subt{m} x^2 = \frac12 K\subt{m}\qty[\Re(X)]^2$$
+$$E\subt{k} = \frac12 M\subt{m} v^2 = \frac12 M\subt{m} \qty[\Re(V)]^2$$
 若单振子仅作简谐振动，则根据式(\ref{eq:complexop_xy})，势能和动能的一个周期
 平均值分别为
-$$\overline{E\st{p}} = \frac12 K\st{m} \overline{x^2} = \frac14 K\st{m}
+$$\overline{E\subt{p}} = \frac12 K\subt{m} \overline{x^2} = \frac14 K\subt{m}
 |X|^2$$
-$$\overline{E\st{k}} = \frac12 M\st{m} \overline{v^2} = \frac14 M\st{m}
+$$\overline{E\subt{k}} = \frac12 M\subt{m} \overline{v^2} = \frac14 M\subt{m}
 |V|^2$$
 对于自由振动，
-$$V = \mj \omega_0 X\qc \qty(\omega_0 = \sqrt{\frac{K\st{m}}{M\st{m}}})$$
+$$V = \mj \omega_0 X\qc \qty(\omega_0 = \sqrt{\frac{K\subt{m}}{M\subt{m}}})$$
 代入前式，知平均势能等于平均动能：
-$$\overline{E\st{p}} = \overline{E\st{k}}$$
+$$\overline{E\subt{p}} = \overline{E\subt{k}}$$
 
 \subsubsection{声能通量密度和声强的运算}
 声能通量密度$\vb{I}$为声压$p$与速度适量$\vb{v}$的乘积：$\vb{I}=p \vb{v}$。
@@ -318,9 +525,9 @@ http://xlwangnu.blog.163.com/blog/static/190719270201192502043374/
 表面波形式存在，但垂直于界面的方向上指数衰减。
 
 若透射媒质的声速$c_2$大于入射媒质的声速$c_1$，且入射角（incident angle）
-$\theta\st{i}$大于全反射临界角$\theta\st{ic}$，
+$\theta\subt{i}$大于全反射临界角$\theta\subt{ic}$，
 \begin{equation}
-\theta\st{ic} = \arcsin \frac{c_1}{c_2} = \arcsin n, \qty(n=\frac{c_1}{c_2}
+\theta\subt{ic} = \arcsin \frac{c_1}{c_2} = \arcsin n, \qty(n=\frac{c_1}{c_2}
 <1)
 \end{equation}
 声波全部反射。此即著名的\emph{声全反射现象}（total reflection）。与光
@@ -331,147 +538,147 @@ $\theta\st{i}$大于全反射临界角$\theta\st{ic}$，
 
 \subsection{声场分布}
 如图xx所示，频率为$\omega$的平面声波从声特性阻抗率为$\rho_1c_1$的媒质中以角
-度$\theta\st{i}$入射到声特性阻抗率为$\rho_2c_2$的媒质上。
+度$\theta\subt{i}$入射到声特性阻抗率为$\rho_2c_2$的媒质上。
 设入射方向和两媒质边界面的法向构成的平面为$(x,y)$平面，$x$轴沿边界内法向，
 $y$轴在边界平面上。根据平面行波论，入射（incident）、反射（reflected）和
 透射（transmitted）的声场解各具如下形式：
 \begin{equation}
 	\label{eq:totalref_pressure}
 	\begin{cases}
-	p\st{i} = p\st{ia} \me^{-\mj k_1 \vb{n}\st{i} \vdot \vb{r}}
-	\qc \vb{v}\st{i} = \dfrac{p\st{i}}{\rho_1c_1} \vb{n}\st{i}\\
-	p\st{r} = p\st{ra} \me^{-\mj k_1 \vb{n}\st{r} \vdot \vb{r}}
-	\qc \vb{v}\st{r} = \dfrac{p\st{r}}{\rho_1c_1} \vb{n}\st{r}
-	\qc (p\st{ra} = r_p p\st{ia}) \\
-	p\st{t} = p\st{ta} \me^{-\mj k_2 \vb{n}\st{t} \vdot \vb{t}}
-	\qc \vb{v}\st{t} = \dfrac{p\st{t}}{\rho_2c_2} \vb{n}\st{t}
-	\qc (p\st{ta} = t_p p\st{ta}) 
+	p\subt{i} = p\subt{ia} \me^{-\mj k_1 \vb{n}\subt{i} \vdot \vb{r}}
+	\qc \vb{v}\subt{i} = \dfrac{p\subt{i}}{\rho_1c_1} \vb{n}\subt{i}\\
+	p\subt{r} = p\subt{ra} \me^{-\mj k_1 \vb{n}\subt{r} \vdot \vb{r}}
+	\qc \vb{v}\subt{r} = \dfrac{p\subt{r}}{\rho_1c_1} \vb{n}\subt{r}
+	\qc (p\subt{ra} = r_p p\subt{ia}) \\
+	p\subt{t} = p\subt{ta} \me^{-\mj k_2 \vb{n}\subt{t} \vdot \vb{t}}
+	\qc \vb{v}\subt{t} = \dfrac{p\subt{t}}{\rho_2c_2} \vb{n}\subt{t}
+	\qc (p\subt{ta} = t_p p\subt{ta}) 
 	\end{cases}
 \end{equation}
-式中，$p\st{ia}$、$p\st{ra}$和$p\st{ta}$分别为入射、反射和透射（折射）
-波的声压幅度，$r_p$和$t_p$分别为声压反射系数和透射系数，$\theta\st{t}$为
+式中，$p\subt{ia}$、$p\subt{ra}$和$p\subt{ta}$分别为入射、反射和透射（折射）
+波的声压幅度，$r_p$和$t_p$分别为声压反射系数和透射系数，$\theta\subt{t}$为
 折射角（refracted angle），$k_1$和$k_2$分别为入射和透射媒质的波数，
-而$\vb{n}\st{i}$、$\vb{n}\st{r}$和$\vb{n}\st{t}$则依次为入射、反射和
+而$\vb{n}\subt{i}$、$\vb{n}\subt{r}$和$\vb{n}\subt{t}$则依次为入射、反射和
 折射波的方向矢量，
 \begin{equation}
 	\label{eq:totalref_n}
-	\vb{n}\st{i}=(\cos \theta\st{i}, \sin \theta\st{i})\qc 
-	\vb{n}\st{r}=(-\cos \theta\st{r}, \sin \theta\st{r})\qc 
-	\vb{n}\st{t}=(\cos \theta\st{t}, \sin \theta\st{t})
+	\vb{n}\subt{i}=(\cos \theta\subt{i}, \sin \theta\subt{i})\qc 
+	\vb{n}\subt{r}=(-\cos \theta\subt{r}, \sin \theta\subt{r})\qc 
+	\vb{n}\subt{t}=(\cos \theta\subt{t}, \sin \theta\subt{t})
 \end{equation}
-在$\vb{n}\st{r}$表达式中，已利用了关系$\vb{theta}\st{r}=\theta\st{i}$。为
+在$\vb{n}\subt{r}$表达式中，已利用了关系$\vb{theta}\subt{r}=\theta\subt{i}$。为
 简洁起见，本文一根省略时间因子$\exp(\mj \omega t)$。
 
 根据Snell定律(折射律)，
 \begin{equation}
 	\label{eq:totalref_snell}
-	\sin\theta\st{t} = \frac{\sin\theta\st{i}}{n}\qc (n<1)
+	\sin\theta\subt{t} = \frac{\sin\theta\subt{i}}{n}\qc (n<1)
 \end{equation}
-当$\theta>\theta\st{ic}$时，$\sin\theta\st{t}>1$，$\theta\st{t}$不复为实数
-而是复数。是以，作复变换：$\theta\st{t} \rightarrow \psi$，
+当$\theta>\theta\subt{ic}$时，$\sin\theta\subt{t}>1$，$\theta\subt{t}$不复为实数
+而是复数。是以，作复变换：$\theta\subt{t} \rightarrow \psi$，
 \begin{equation}
 	\label{eq:totalref_theta_trans}
-	\theta\st{t} = \frac{\uppi}{2}+\mj \psi\qc 
+	\theta\subt{t} = \frac{\uppi}{2}+\mj \psi\qc 
 	\begin{cases}
-		\sin \theta\st{t} = \cosh \psi\\
-		\cos\theta\st{t} = -\mj \sinh \psi
+		\sin \theta\subt{t} = \cosh \psi\\
+		\cos\theta\subt{t} = -\mj \sinh \psi
 	\end{cases}
 \end{equation}
 代入折射公式(\ref{eq:totalref_snell})，则 Snell定律改为
 \begin{equation}
 	\label{eq:totalref_snell2}
-	\cosh \psi = \frac{\sin \theta\st{i}}{n}
+	\cosh \psi = \frac{\sin \theta\subt{i}}{n}
 \end{equation}
-由此可知，$\psi$具有实数解。当$\theta\st{i}$从$\theta\st{ic}$增至$\uppi/2$
+由此可知，$\psi$具有实数解。当$\theta\subt{i}$从$\theta\subt{ic}$增至$\uppi/2$
 时，$\psi$从$0$单调增大至$\arccosh(1/n)>0$。此处杂提醒读者，数学上，变换
 (\ref{eq:totalref_theta_trans})中的$\psi$可正可负。但考虑到下面公式xx(12)
-给出的透射声压解$p\st{t}$中，声波必沿$x$正向衰减，$\psi$只能取正值。引入变
-换(\ref{eq:totalref_theta_trans})后，全反射（$\theta\st{i}>\theta\st{ic}$）
+给出的透射声压解$p\subt{t}$中，声波必沿$x$正向衰减，$\psi$只能取正值。引入变
+换(\ref{eq:totalref_theta_trans})后，全反射（$\theta\subt{i}>\theta\subt{ic}$）
 状态下的声压反射系数$r_p$和透射系数$t_p$可表为\footnote{编者著：利用$x=0$
-处的边界条件，即$\begin{cases}1+r_p = t_p\\ \dfrac{1-r_p}{z\st{s1}} =
-	\dfrac{t_p}{z\st{s2}}\end{cases}$，其中法向声阻抗率分别是
-$z\st{s1}= \rho_1c_1/\cos \theta\st{i}, z\st{s2} = \rho_2c_2
-/\cos\theta\st{i}$，得到$r_p = \dfrac{z\st{s2}-z\st{s1}}{z\st{s2}+z\st{s1}}
+处的边界条件，即$\begin{cases}1+r_p = t_p\\ \dfrac{1-r_p}{z\subt{s1}} =
+	\dfrac{t_p}{z\subt{s2}}\end{cases}$，其中法向声阻抗率分别是
+$z\subt{s1}= \rho_1c_1/\cos \theta\subt{i}, z\subt{s2} = \rho_2c_2
+/\cos\theta\subt{i}$，得到$r_p = \dfrac{z\subt{s2}-z\subt{s1}}{z\subt{s2}+z\subt{s1}}
 $。}
 \begin{equation}
 	\label{eq:totalref_rptp}
 	\begin{cases}
-		r_p & = \dfrac{p\st{ra}}{p\st{ia}} = \dfrac{m\cos \theta \st{i} +
-	\mj n \sinh \psi }{m\cos \theta\st{i} - \mj n \sinh \psi} = 
+		r_p & = \dfrac{p\subt{ra}}{p\subt{ia}} = \dfrac{m\cos \theta \subt{i} +
+	\mj n \sinh \psi }{m\cos \theta\subt{i} - \mj n \sinh \psi} = 
 	\me^{2\mj \phi}\\
-	t_p&=\dfrac{p\st{ta}}{p\st{ia}} = \dfrac{2m\cos \theta \st{i}}{m\cos 
-		\theta\st{i} - \mj n \sinh \psi} = 2\cos\phi \me^{\mj \phi}
+	t_p&=\dfrac{p\subt{ta}}{p\subt{ia}} = \dfrac{2m\cos \theta \subt{i}}{m\cos 
+		\theta\subt{i} - \mj n \sinh \psi} = 2\cos\phi \me^{\mj \phi}
 	\end{cases}
 	\qc \qty(m = \frac{\rho_2}{\rho_1})
 \end{equation}
 式中的相位角$\phi$由下列公式给出
 \begin{equation}
-	\tan \phi = \frac{n\sinh \psi}{m \cos \theta\st{i}} = 
-	\frac{\rho_1c_1}{\rho_2c_2} \frac{\sinh \psi}{\cos \theta\st{i}}
+	\tan \phi = \frac{n\sinh \psi}{m \cos \theta\subt{i}} = 
+	\frac{\rho_1c_1}{\rho_2c_2} \frac{\sinh \psi}{\cos \theta\subt{i}}
 	\qc \qty(0<\phi<\frac{\uppi}{2})
 \end{equation}
-从式(\ref{eq:totalref_rptp})可见，当入射角$\theta\st{i}$大于临界角
-$\theta\st{ic}$时，反射波的振幅等于入射的（$|r_p|=1$），但入射和反射
+从式(\ref{eq:totalref_rptp})可见，当入射角$\theta\subt{i}$大于临界角
+$\theta\subt{ic}$时，反射波的振幅等于入射的（$|r_p|=1$），但入射和反射
 声压间存在$2\phi$的相位差。把$r_p=\exp(2\mj \phi)$代入入射和反射声压表达
 式(\ref{eq:totalref_pressure})，两者相加再简化，得到入射侧的总声压场
 $p_1$和速度场$\vb{v}_1=(v_{1,x}, v_{2,y})$的表达式
 \begin{equation}
 	\label{eq:totalref_pv1}
 	\begin{cases}
-		p_1&= p\st{i}+p\st{r} = 2p\st{ia}\cos(k_1x\cos\theta\st{i}+\phi)
-		\me^{-\mj (k_1y\sin\theta\st{i}-\phi)}\\
-		v_{1,x}&= v_{\mi x} + v_{\mathrm{r}x} = 2v\st{ia}\sin
-		(k_1x\cos\theta\st{i}+\phi)\cos\theta\st{i}
-		\me^{-\mj \qty(k_1y\sin\theta\st{i}-\phi+ \uppi/2)}\\
-		v_{1,y}&= v_{\mi y} + v_{\mathrm{r}y} = 2v\st{ia}\cos
-		(k_1x\cos\theta\st{i}+\phi)\sin\theta\st{i}
-		\me^{-\mj \qty(k_1y\sin\theta\st{i}-\phi)}
+		p_1&= p\subt{i}+p\subt{r} = 2p\subt{ia}\cos(k_1x\cos\theta\subt{i}+\phi)
+		\me^{-\mj (k_1y\sin\theta\subt{i}-\phi)}\\
+		v_{1,x}&= v_{\mi x} + v_{\mathrm{r}x} = 2v\subt{ia}\sin
+		(k_1x\cos\theta\subt{i}+\phi)\cos\theta\subt{i}
+		\me^{-\mj \qty(k_1y\sin\theta\subt{i}-\phi+ \uppi/2)}\\
+		v_{1,y}&= v_{\mi y} + v_{\mathrm{r}y} = 2v\subt{ia}\cos
+		(k_1x\cos\theta\subt{i}+\phi)\sin\theta\subt{i}
+		\me^{-\mj \qty(k_1y\sin\theta\subt{i}-\phi)}
 	\end{cases}
-	\qc \qty(v\st{ia} = \frac{p\st{ia}}{\rho_1c_1})
+	\qc \qty(v\subt{ia} = \frac{p\subt{ia}}{\rho_1c_1})
 \end{equation}
-式中，$v\st{ia}$是入射声波质点速度振幅。可见，入射侧声场因全反射而在法向
+式中，$v\subt{ia}$是入射声波质点速度振幅。可见，入射侧声场因全反射而在法向
 （负$x$方向）形成了驻波，但沿界面（$y$方向）仍是传播的。沿界面的传播的相速度和波长分别为
 \begin{equation}
 	\label{eq:totalref_interface1}
 	\begin{cases}
-		c_{1y} & = \dfrac{\omega}{k_1\sin \theta\st{i}}
-		=\dfrac{c_1}{\sin\theta\st{i}} \geq c_1\\
+		c_{1y} & = \dfrac{\omega}{k_1\sin \theta\subt{i}}
+		=\dfrac{c_1}{\sin\theta\subt{i}} \geq c_1\\
 		\displaystyle
-		\lambda_{1y} &= \dfrac{2\uppi}{k_1\sin\theta\st{i}}
-		=\dfrac{\lambda_1}{\sin\theta\st{i}} \geq\lambda_1
+		\lambda_{1y} &= \dfrac{2\uppi}{k_1\sin\theta\subt{i}}
+		=\dfrac{\lambda_1}{\sin\theta\subt{i}} \geq\lambda_1
 	\end{cases}
 \end{equation}
 所以，沿界面传播的相速度大于入射媒质的常规声速$c_1=\omega /k_1$，波长$\lambda
 _{1y}$比常规波长$\lambda_1 = k_1/2\uppi$要长；仅当入射波完全平行于界面
-($\theta\st{i}=\uppi/2$)时，$c_{1y}=c_1$，$\lambda_{1y}=\lambda_1$。
+($\theta\subt{i}=\uppi/2$)时，$c_{1y}=c_1$，$\lambda_{1y}=\lambda_1$。
 公式(\ref{eq:totalref_pv1})也表明，在全反射下，法向驻波声场依赖于入射角
-$\theta\st{i}$的相位$\phi$，故驻波的波节和波腹位置因入射角$\theta\st{i}$
-变化而发生漂移。值得注意的是，在临界全反射($\theta\st{i}=\theta\st{ic}$)下，
-$\phi=0$，$t_p=2$，即透射声压是入射声压的两倍。当入射角$\theta\st{i}\to 
+$\theta\subt{i}$的相位$\phi$，故驻波的波节和波腹位置因入射角$\theta\subt{i}$
+变化而发生漂移。值得注意的是，在临界全反射($\theta\subt{i}=\theta\subt{ic}$)下，
+$\phi=0$，$t_p=2$，即透射声压是入射声压的两倍。当入射角$\theta\subt{i}\to 
 \uppi/2$(最大入射角)时，相位$\phi: 0\to \uppi/2$，透射系数的幅值$|t_p|$
 从2降至0.从式(\ref{eq:totalref_pv1})还可看出，在入射侧的任意位置，速度分量
 相位相差$\uppi/2$，流体质点在$(x,y)$平面上围绕平衡位置作椭圆运动，与单纯的
 行波场不同。
 
-把变换式(\ref{eq:totalref_snell})代入式(\ref{eq:totalref_n})中$\vb{n}\st{t}$
+把变换式(\ref{eq:totalref_snell})代入式(\ref{eq:totalref_n})中$\vb{n}\subt{t}$
 的表达式中，结果为：
 \begin{equation}
-\vb{n}\st{t} = (-\mj \sinh \psi, \cosh\psi)
+\vb{n}\subt{t} = (-\mj \sinh \psi, \cosh\psi)
 \label{eq:totalref_nt}
 \end{equation}
-即透射波矢$\vb{k}\st{t} = k_2\vb{n}\st{t}$的法向分量是虚数，表明透射波在$x$
+即透射波矢$\vb{k}\subt{t} = k_2\vb{n}\subt{t}$的法向分量是虚数，表明透射波在$x$
 方向是非传播的。利用式(\ref{eq:totalref_rptp})给出的透射系数$t_p$和式
-(\ref{eq:totalref_nt})，式(\ref{eq:totalref_pressure})中的透射声压$p\st{t}$
-和速度矢量$\vb{v}\st{t}=(v_{\mathrm{t,} x}, v_{\mathrm{t,} y})$经整理可进一步表为
+(\ref{eq:totalref_nt})，式(\ref{eq:totalref_pressure})中的透射声压$p\subt{t}$
+和速度矢量$\vb{v}\subt{t}=(v_{\mathrm{t,} x}, v_{\mathrm{t,} y})$经整理可进一步表为
 \begin{equation}
 	\label{eq:totalref_pvt}
 	\begin{cases}
-		p\st{t} = 2p\st{ia} \cos \phi \me^{-k_2x\sinh \psi - \mj (k_2 y
+		p\subt{t} = 2p\subt{ia} \cos \phi \me^{-k_2x\sinh \psi - \mj (k_2 y
 		\cosh \psi -\phi)}\\
-		v_{\mathrm{t,}x} = \dfrac{\rho_1c_1}{\rho_2c_2} 2v\st{ia} \cos\phi
+		v_{\mathrm{t,}x} = \dfrac{\rho_1c_1}{\rho_2c_2} 2v\subt{ia} \cos\phi
 		\sinh \psi \me^{k_2x\sinh \psi - \mj\qty(k_2y\cosh \psi -\phi
 		+\uppi/2)}\\
-		v_{\mathrm{t,}y} = \dfrac{\rho_1c_1}{\rho_2c_2} 2v\st{ia} \cos\phi
+		v_{\mathrm{t,}y} = \dfrac{\rho_1c_1}{\rho_2c_2} 2v\subt{ia} \cos\phi
 		\cosh \psi \me^{k_2x\sinh \psi - \mj\qty(k_2y\cosh \psi -\phi
 		)}
 	\end{cases}
@@ -482,10 +689,10 @@ waves) --- 仅存在于边界面附近的声波，类似于固体表面的瑞利
 表面波的「透射深度」$x=d$为：
 \begin{equation}
 	2\uppi \frac{d}{\lambda_2} = \frac{1}{\sinh\psi} = \frac{n}{\sqrt{
-		\sin^2\theta\st{i}-n^2}}
+		\sin^2\theta\subt{i}-n^2}}
 \end{equation}
-所以，透射深度$d$是入射角$\theta\st{i}$的函数。当入射角$\theta\st{i}$大于
-但接近临界角$\theta\st{ic}$时，透射深度$d$很大；若$\theta\st{i}=\theta\st{ic}
+所以，透射深度$d$是入射角$\theta\subt{i}$的函数。当入射角$\theta\subt{i}$大于
+但接近临界角$\theta\subt{ic}$时，透射深度$d$很大；若$\theta\subt{i}=\theta\subt{ic}
 $，则$\psi\to0$，$d \to \infty$，透射声波在$x$方向均匀，此正是沿$y$方向传播
 的平面波。
 从式(\ref{eq:totalref_pvt})还可看出，在透射侧的任意位置，速度分量相位相差
@@ -507,7 +714,7 @@ $$
 c_{1y} = c_{2y} \qc \lambda_{1y}=\lambda_{2y}
 $$
 所以，在界面两侧，沿界面传播的相速度和波长是相等的。其实，根据Snell定律，
-$k_1\sin\theta\st{i} = k_2\sin\theta\st{t}$，这一结论对任意入射皆成立。
+$k_1\sin\theta\subt{i} = k_2\sin\theta\subt{t}$，这一结论对任意入射皆成立。
  
 
 
@@ -582,12 +789,12 @@ $$
 \Delta V=\sigma \dd{x}$。在此域内对连续性方程作体积分：
 $$
 0 = \iiint_{\Delta V} \qty[\pdv{\rho}{t} + \div(\rho\vb{v})] \dd{V}
-=\iiint_{\Delta V} \pdv{\rho}{t} \dd{V} + \iint_{\Delta V}\div (\rho \vb{v})
+=\iiint_{\Delta V} \pdv{\rho}{t} \dd{V} + \iiint_{\Delta V}\div (\rho \vb{v})
 \dd{V}
 $$
 
 $$
-\xrightarrow{\text{apply Gauss's Theorem}} \dv{t} \qty(\dd{x} \int_{\sigma
+\xrightarrow{\text{apply Gaussian Theorem}} \dv{t} \qty(\dd{x} \int_{\sigma
 (x)} \rho \dd{\bm{\sigma}}) + \int_{\sigma (x+\dd{x})} 
 \rho \vb{v}\vdot \dd{\bm{\sigma}} - \int_{\sigma(x)} \rho\vb{v} \vdot \dd
 \bm{\sigma} = 0
@@ -690,7 +897,7 @@ $$u=\mu^2$$
 其中「$\pm$」表示分别沿管轴正向和反向传播。
 此声波解存在\emph{截止频率}：
 $$
-f\st{cutoff} = \frac{\mu c_0}{2\uppi}
+f\subt{cutoff} = \frac{\mu c_0}{2\uppi}
 $$
 当频率低于此频率时，声波是沿管轴指数衰减（增长）的。
 欲使$u$恰为此常数，按(\ref{eq:slowvar_u})，$R$只能取如下形式
@@ -727,29 +934,29 @@ $$
 无限长号筒的正向行波解为
 \begin{equation}
 	\begin{cases}
-		p = p\st{a}\me^{-\mu x+\mj(\omega t \mp \gamma x)}\\
-		v = v\st{a} \me^{-\mu x + \mj (\omega t\mp \gamma x)}
+		p = p\subt{a}\me^{-\mu x+\mj(\omega t \mp \gamma x)}\\
+		v = v\subt{a} \me^{-\mu x + \mj (\omega t\mp \gamma x)}
 	\end{cases}
 	\qc 
-	\qty(v\st{a} = \frac{p\st{a}}{\rho_0c_0} \me^{-\mj \theta}\qc
+	\qty(v\subt{a} = \frac{p\subt{a}}{\rho_0c_0} \me^{-\mj \theta}\qc
 	\tan\theta = \frac{\mu}{\gamma})
 \end{equation}
 号筒任意横截面处的声阻抗
 \begin{equation}
-	Z\st{a}(x) = \frac{p}{U} = \frac{p}{S(x)v}
+	Z\subt{a}(x) = \frac{p}{U} = \frac{p}{S(x)v}
 	=\frac{\rho_0c_0}{S(x)} \me^{\mj \theta}
 \end{equation}
 而声阻抗率是常数。辐射声功率
 $$
 W = \frac12 \Re(p^* U)|_{x=0}
-=\frac{1}{2} \Re(Z\st{a}|_{x=0}) |U|_{x=0}^2
-=\frac12 \rho_0 c_0 S_0 \cos\theta |v\st{a}|^2
+=\frac{1}{2} \Re(Z\subt{a}|_{x=0}) |U|_{x=0}^2
+=\frac12 \rho_0 c_0 S_0 \cos\theta |v\subt{a}|^2
 $$
 在截止频率处$\theta =\uppi /2$，辐射功率为零\footnote{在截止频率下，$k<\mu$
 	声场解为
 	$$
 	\begin{cases}
-		\displaystyle p &\displaystyle =p\st{a} \me^{\displaystyle
+		\displaystyle p &\displaystyle =p\subt{a} \me^{\displaystyle
 			-\mu x - \sqrt{\mu^2-k^2}x+\mj \omega
 	t}\\
 	\displaystyle v&\displaystyle =-\frac{1}{\mj k\rho_0c_0} \pdv{p}{x}
@@ -757,16 +964,16 @@ $$
 	\end{cases}
 $$
 其声阻抗为
-$$Z\st{a} = \frac{\rho_0c_0}{S(x)} \frac{\mj k}{\mu +\sqrt{\mu^2-k^2}}
-=\frac{\rho_0c_0}{S(x)} \frac{\mj \omega}{\omega\st{cutoff}+\sqrt{\omega\st{cutoff}^2}
+$$Z\subt{a} = \frac{\rho_0c_0}{S(x)} \frac{\mj k}{\mu +\sqrt{\mu^2-k^2}}
+=\frac{\rho_0c_0}{S(x)} \frac{\mj \omega}{\omega\subt{cutoff}+\sqrt{\omega\subt{cutoff}^2}
 -\omega^2}
-=\mj \omega M\st{a}
+=\mj \omega M\subt{a}
 $$
 $$
-\qty(\displaystyle M\st{a} = \frac{1}{\omega\st{cutoff}+\sqrt{\omega\st{cutoff}^2-\omega^2}}
+\qty(\displaystyle M\subt{a} = \frac{1}{\omega\subt{cutoff}+\sqrt{\omega\subt{cutoff}^2-\omega^2}}
 \frac{\rho_0c_0}{S(x)}\qc 
-\omega\st{cutoff}=2\uppi f\st{cutoff})$$
-这是一个声质量抗，声质量为$M\st{a}$。
+\omega\subt{cutoff}=2\uppi f\subt{cutoff})$$
+这是一个声质量抗，声质量为$M\subt{a}$。
 }。
 当高于截止频率时，$\cos \theta \approx 1$，辐射功率相近乎大活塞的，效率很高
 。
@@ -777,8 +984,8 @@ $$
 同样设$x_0=0$，无限长悬链线号筒的解为：
 \begin{equation}
 	\begin{cases}
-	p&=p\st{a}\sech \mu x \ \me^{\mj (\omega t-\gamma x)}\\
-	\rho_0 c_0 v & = p\st{a} \sech \mu x\ \frac{
+	p&=p\subt{a}\sech \mu x \ \me^{\mj (\omega t-\gamma x)}\\
+	\rho_0 c_0 v & = p\subt{a} \sech \mu x\ \frac{
 	\cosh (\mu x-\mj \theta)}{\cosh \mu x} \me^{\mj(\omega t-\gamma x)}
 	\end{cases}
 	\qc 
@@ -790,10 +997,10 @@ $$
 	\xrightarrow{x\to 0} \frac{\rho_0c_0}{\cos\theta}
 \end{equation}
 在喉口（$x=0$）处的声阻抗
-$$Z\st{a}|_{x=0} = \frac{\rho_0c_0}{S_0\cos\theta}$$
+$$Z\subt{a}|_{x=0} = \frac{\rho_0c_0}{S_0\cos\theta}$$
 为纯声阻，辐射效率很高。辐射声功率
 $$W = \frac12 \Re (p^*U) = \frac{1}{2}\frac{\rho_0c_0S_0}{\cos\theta}
-|v\st{a}|^2$$
+|v\subt{a}|^2$$
 若喉口振速恒定，则当频率接近截止频率时，辐射功率达无穷大，辐射效率极高。
 此特性正与指数号筒相反。
 
@@ -801,8 +1008,128 @@ TBD
 
 \chapter{声波的辐射}
 
+% pointfree
+\section{自由空间的点声源\\
+Point Source of Sound in Free Space}
+
+\emph{摘要}\
+点声源犹如质点，是声源的数学抽象。
+点声源不仅是理解尺寸小于波长的小型声源辐射的基础，而且是构成一般声辐射的基本元素：任意声源辐射的声场皆可视为点声源辐射声场之叠加。
+本文论述点声源辐射的理论及辐射特性。
+
+\subsection{数学模型与声场解}
+声源振动激励周围流体而辐射声波。
+当存在声源时，流体空间的声场服从有源波动方程。
+设$q(\vb{r},t)$是声源在单位时间内单位体积产生的流量，在包围声源体积为$V$的空间之内，源所产生的总流量为
+$$
+Q(t) = \iiint_V q(\vb{r},t)\dd V
+$$
+
+假定空间产生体积流的区域收缩成位于$\vb{r}_0$ 的几何点，同时保持流量$Q$有限且恒定。
+为此，在空间位置$\vb{r}_0$单位体积内的流量$q$必趋于无穷大，即：
+$$q(\vb{r},t) = Q(t) \delta(\vb{r}-\vb{r}_0)\qc \qty[\iint_V \delta(\vb{r}-\vb{r}_0) \dd V = 1]$$
+此即点声源的数学描述。式中$\delta$ 是 Dirac-Delta 函数，在$\vb{r}_0$处奇异，但除点$\vb{r}_0$之外处处为零。
+因此，点声源服从如下$\delta$源声波方程：
+\begin{equation}
+	\laplacian p -\frac1{c_0^2} \pdv[2]{p}{t} = -\rho_0 \dv{Q(t)}{t} \delta (\vb{r}-\vb{r}_0)
+	\label{eq:pointfree_delta}
+\end{equation}
+式中$\rho_0$是球外流体静密度，$c_0$是流体的声速。
+如果引入速度势$\Phi$，则流体质点速度$\vb{v}$和声压可表为：
+\begin{equation}
+	\vb{v}=-\grad \Phi\qc p=\rho_0 \pdv{\Phi}{t}
+	\label{}
+\end{equation}
+ 代入方程(\ref{eq:pointfree_delta})，得到速度势$\Phi$满足的波动方程
+ \begin{equation}
+	 \laplacian \Phi -\frac{1}{c_0^2} \pdv[2]{\Phi}{t} = -Q(t) \delta(\vb{r}-\vb{r}_0)
+	 \label{eq:pointfree_Phi}
+ \end{equation}
+
+ 设有以$\vb{r}_0$ 为球心、半径$a\to 0$的无限小球，包围点源。
+ 方程(\ref{eq:pointfree_Phi})在此无限小球上的体积分为
+\begin{align*}
+	\iiint_{|\vb{r}-\vb{r}_0|\leq a}
+	\qty(\laplacian \Phi - \frac{1}{c_0^2} \pdv[2]{\Phi}{t} ) \dd V 
+	&=
+	\iiint_{|\vb{r}-\vb{r}_0|\leq a}
+	\qty[-Q(t)\delta(\vb{r}-\vb{r}_0)]\dd V\\
+	\iiint_{|\vb{r}-\vb{r}_0|\leq a}
+	\div\qty(\grad \Phi)\dd V-\frac{1}{c_0^2} \pdv[2]{t}
+	\iiint_{|\vb{r}-\vb{r}_0|\leq a}
+	\Phi \dd V&=-Q(t)\\
+	\iiint_{|\vb{r}-\vb{r}_0|= a}
+	\grad \Phi \vdot \dd \vb{S}
+	-\frac{1}{c_0^2} \pdv[2]{t} 
+	\iiint_{|\vb{r}-\vb{r}_0|\leq a}
+	\Phi \dd V &=-Q(t)
+\end{align*} 
+ 上式第一个积分在所考虑的小球面上的面积分，而第二个体积分是对小球体的体积分，方程右端利用了$\delta$函数的数学性质。
+
+ 显然，点声源的声场具有以点源为中心的球对称性：$p=p(r,t)$。
+ 在源之外，波动方程(\ref{eq:pointfree_delta})是齐次的，其径向向外传播（辐射）的通解为
+ \begin{equation}
+	 \Phi=\frac1r f\qty(t-\frac{r}{c_0})\qc \qty(r = \norm{\vb{r}-\vb{r}_0})
+	 \label{eq:pointfree_PhiSol}
+ \end{equation}
+ 式中，波函数$f(z)$描述所辐射球面波之具体形状，由源决定。
+ 根据 Euler 运动方程，此速度势场所对应的质点速度$\vb{v}$及其在半径为$a\to0$的、球心位于源点的球面上的面积分为
+\begin{align*}
+	\vb{v} & = -\grad \Phi = \qty[f\qty(t-\frac{r}{c_0}) +f'\qty(t-\frac{r}{c_0}) \frac{r}{c_0}]\frac{\grad r}{r^2}\\
+	\lim_{a\to 0}\oiint_{r=a}\vb{v}\vdot \dd \vb{S} &=
+	\lim_{a\to 0} \oiint_{r=a}\qty [f\qty(t-\frac{r}{c_0}) + f'\qty(t-\frac{r}{c_0})\frac{r}{c_0}]\frac{\grad r}{r^2}
+	\vdot \dd \vb{S} \\
+	&= 4\uppi \lim_{a\to 0} \qty[f\qty(t-\frac{a}{c_0}) +f'\qty(t-\frac{a}{c_0})\frac{a}{c_0}]\\
+	& = 4 \uppi f(t)
+\end{align*}
+其中，函数$f$上的撇号表示对$f(\tau)$的导数：$f'(\tau) = \dv*{f(\tau)}{\tau}$。
+显然，根据质量守恒，上式左端的封闭曲面积分等于$Q(t)$。
+所以，
+\[
+f(t)=\frac{Q(t)}{4\uppi}
+\]
+
+ 由此确定 了$f$的形式。
+ 代入(\ref{eq:pointfree_PhiSol})，得到点声源的声场解：
+ \begin{subequations}
+ \begin{align}
+	 \Phi & = \frac{1}{4\uppi r}Q\qty(t-\frac{r}{c_0})\\
+	 p&= \rho_0 \pdv{\Phi}{t} = \frac{\rho_0}{4\uppi r}Q'\qty(t-\frac{r}{c_0})
+ \end{align}
+ \label{eq:pointfree_sol}
+ \end{subequations}
+  若源$Q$是简谐的，频率为$\omega$，源强为$Q\subt{a}$，
+  \[Q(t) = Q\subt{a} \me^{\mj \omega t}\]
+  则声场解(\ref{eq:pointfree_sol})化为谐波解\footnote{原文为$\Phi(\vb{r},k)$}：
+  \begin{subequations}
+	  \begin{align}
+		  \Phi(\vb{r},\omega) &= \frac{Q\subt{a}}{4\uppi r}\me^{\mj(\omega t -kr)}\\
+		  p(\vb{r},\omega) &=\mj k \rho_0 c_0\Phi(\vb{r},\omega)
+	  \end{align}
+	  \label{}
+  \end{subequations}
+式中波数$k=\omega/c_0$。
+相应的流体径向速度：
+\begin{equation}
+	v_r=-\pdv{\Phi}{r} = \qty(1+\frac{1}{\mj kr})\mj k \Phi=\qty(1+\frac{1}{\mj kr})\frac{p}{\rho_0c_0}
+	\label{eq:pointfree_vr}
+\end{equation}
+和径向声阻抗率
+\begin{align}
+	z\subt{s} = \frac{p}{v_r} = \frac{\rho_0c_0}{1+\qty(\mj kr)^{-1}} 
+	\xlongrightarrow{kr \gg 1} \rho_0c_0
+	\label{eq:pointfree_zs}
+\end{align}
+ 公式(\ref{eq:pointfree_vr})表明，远场（$kr\gg 1$）的径向速度和声压近似服从平面波的关系。
+ 公式(\ref{eq:pointfree_zs})也指出，远场的径向声阻抗率近乎平面波的。
+
+ TBD
+
+
+
+
 % green
-\section{点声源与Grenn函数\\
+\section{点声源与Green函数\\
 Point Sources of Sound and Green Functions}
 
 \emph{摘要}\ 
@@ -824,27 +1151,393 @@ $$q(\vb{r}) = Q_0 \delta(\vb{r}-\vb{r}_0)\qc
 其中$\vb{r}=(x,y,z)\in V$是声场内的观察点的位置，三维Dirac-$\delta$函数
 $\delta(\vb{r}-\vb{r}_0)= \delta(x-x_0)\delta(y-y_0)\delta(z-z_0)$。
 不妨设此点声源的源强$Q_0=1$，并假设$\Sigma$是阻抗型的边界，故所辐射的声场
-速度势$G$满足如下的\emph{有源波动方程}和\emph{边界条件}：
+速度势$G$满足如下的\emph{有源Helmholtz方程}\footnote{编者注：原文为\emph{
+	有源波动方程}，有误。}和\emph{边界条件}：
 \begin{subequations}
 	\begin{align}
-		\qty(\laplacian + k^2)G(\vb{r};\vb{r}_0) & = \delta (\vb{r}-\vb{r}_0)
-		\qc \qty(\vb{r},\vb{r}_0\in V)\\
+		\qty(\laplacian + k^2)G(\vb{r};\vb{r}_0) & =- \delta (\vb{r}-\vb{r}_0)
+		\qc \qty(\vb{r},\vb{r}_0\in V) \label{eq:green_Ga}\\
 		\qty(\pdv{n} +\mj k \eta )G(\vb{r};\vb{r}_0) & = 0 
-		\qc \qty(\vb{r},\vb{r}_0\in \Sigma)\label{eq:green_boundary}
+		\qc \qty(\b{r},\vb{r}_0\in \Sigma)\label{eq:green_Gb}
 	\end{align}
-	\label{eq:green_boundaryProblem}
+	\label{eq:green_G}
 \end{subequations}式中，$k$是声波波数，$\eta$是边界$\Sigma$的声导纳比，由$\Sigma$的法向声阻抗
-率$z\st{n}$定义：$\eta\equiv \rho_0c_0/z\st{n}$。
+率$z\subt{n}$定义：$\eta\equiv \rho_0c_0/z\subt{n}$。
 $\eta$有两种可能的极端：$\eta=0$的刚性边界和$\eta=\infty$的绝对软边界。
-根据方程(\ref{eq:green_boundary})在绝对软边界条件下必有$G=0$，即边界上的
+根据方程(\ref{eq:green_Gb})在绝对软边界条件下必有$G=0$，即边界上的
 声压为零（稳态场的声压正比于速度势）。
-数学上，边值问题(\ref{eq:green_boundaryProblem})的解$G$就是有界空间的Green
+数学上，边值问题(\ref{eq:green_G})的解$G$就是有界空间的Green
 函数，它即是观察点$\vb{r}\in V$的函数，也与源点$\vb{r}_0 \in V$有关，故特
 写成$G(\vb{r};\vb{r}_0)$的函数形式。
 可以证明，\emph{Green函数$G$具有互易性}：
 $$G(\vb{r}_2;\vb{r}_1) = G(\vb{r}_1;\vb{r}_2)$$
 
+即位于$\vb{r}_1$的单位源强点源在$\vb{r}_2$处产生的声压（正比于速度势）等于
+位于$\vb{r}_2$的单位源强点源在$\vb{r}_1$处产生的声压。
+再次强调，尽管Green函数是一个数学概念，但安与点声源的辐射声场建立了直接的
+关系：
+\begin{equation}
+	\Phi (\vb{r}) = Q_0 G(\vb{r};\vb{r}_0)
+	\label{eq:green_PhiGreen}
+\end{equation}
+即，\emph{Green函数 $G$是单位源强（$Q_0=1$）的点声源所辐射声场的速度势$\Phi$}
+。\footnote{编者注：声压$p$的表达式为：
+	$$p(\vb{r}) = \mj \rho_0 \omega \Phi(\vb{r}) = \mj \rho_0 \omega
+	Q_0 G(\vb{r};\vb{r}_0)$$}
+
+
+\subsection{声场的积分表示}
+Green函数不仅具有如上所述的物理意义，更重要的是它可用于构造一般声场的解。
+一般情形下，空间$V$内的声场既可以是分布式体源$q(\vb{r})$辐射所产生，也可以是
+（部分）边界面的振动辐射所产生，如图\ref{fig:green_sketch}所示。
+声场的速度势$\Phi(\vb{r})$满足如下\emph{有源波动方程}和\emph{边界条件}：
+\begin{subequations}
+	\begin{align}
+		\qty(\laplacian+k^2)\Phi(\vb{r}) &=-q(\vb{r})\qc 
+		\qty[\vb{r} =(x,y,z)\in V]\label{eq:green_Phia} \\
+		\qty(\pdv{n} + \mj k \eta )\Phi(\vb{r}) & = u(\vb{r})\qc
+		\qty(\vb{r} \in \Sigma)\label{eq:green_Phib}
+	\end{align}\label{eq:green_Phi}
+\end{subequations}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/radiation/green_radiationSketch.jpg}
+	\caption{体辐射和边界辐射示意图}
+	\label{fig:green_sketch}
+\end{figure}
+
+根据边界导纳比$\eta$和振速$u$的不同聚会，边界条件(\ref{eq:green_Phib})可以是
+以下几种常见类型之一：
+\begin{outline}[enumerate]
+	\1 刚性边界：$\eta = 0$，且$u = 0$；
+	\1 绝对软边界：$\eta = \infty$，即边界上速度势$\Phi=0$；
+	\1 给定表面法向振速：$\eta = 0$，但$u\neq 0$；
+	\1 阻抗型（非刚性）边界：$\eta \neq 0$，但$u=0$。
+\end{outline}
+
+为求解边值问题(\ref{eq:green_Phi})，一般可采用分离变量法先求(\ref{eq:green_Phia})
+的通解，然后获得满足边界条件(\ref{eq:green_Phib})的定解。
+但除声场空间具有高度对称的极少数情形之外，此种方法笨拙低效。
+很多情形下，更行之有效的或许是基于Green函数的积分方法，而求解Green函数问题
+(\ref{eq:green_Gb})可作为求解边值问题(\ref{eq:green_Phi})的辅助问题。
+
+用$G(\vb{r};\vb{r}_0)$乘方程(\ref{eq:green_Phia})左右两端，用$\Phi(\vb{r})$
+乘以方程(\ref{eq:green_Ga})两端，两者相减后再对其作整个声场空间$V$的体积分，
+并利用三维$\delta $函数的积分性质和Gauss定理，得到如下积分方程：
+$$
+\oiint_\Sigma\qty[G(\vb{r};\vb{r}_0) \pdv{\Phi(\vb{r})}{n} - \Phi(
+\vb{r}) \pdv{G(\vb{r};\vb{r}_0)}{n}] \dd \Sigma 
+=\Phi(\vb{r}_0) - \iiint_V q(\vb{r}) G(\vb{r};\vb{r}_0) \dd V$$
+在此方程中交换$\vb{r}$和$\vb{r}_0$，并利用Green函数的互易性$G(\vb{r};
+\vb{r}_0) = G(\vb{r}_0;\vb{r})$，最终得到有源声波方程(\ref{eq:green_Phia})
+解的积分表示：\footnote{编者注：使用Einstein求和约定方法，可简化推导。}
+\begin{equation}
+	\Phi(\vb{r}) = \iiint_V q(\vb{r}_0) G(\vb{r};\vb{r}_0) \dd{V}
+	+\oiint_\Sigma \qty[G(\vb{r};\vb{r}_0) \pdv{\Phi(\vb{r}_0)}{n}
+	- \Phi(\vb{r}_0) \pdv{G(\vb{r};\vb{r}_0)}{n}]\dd \Sigma
+	\qc (\vb{r}\in V)\label{eq:green_kh}
+\end{equation}
+式中，无论是体积分还是面积分均指对坐标矢量$\vb{r}_0$而言的，$\dd\Sigma$是
+$V$在边界$\Sigma$上的面元，\emph{法向指向体积$V$之外}。
+公式(\ref{eq:green_kh})形式上给出了声场的积分解。
+它表明，有界空间内的声场$\Phi(\vb{r})$是体声源$q$辐射的\emph{直达声}（体
+积分项）和\emph{边界反射声}或\emph{辐射声}之和（面积分项）。
+边界对声场的影响往往体现在两方面：（1）边界作为振动源主动辐射声波；
+（2）边界被动响应声场的作用再影响声场分布。
+
+如果仅存在有限体积的体声源$q$，而无边界$\Sigma$，则上列公式无面积分项。
+然而，实际的三维连续振动体声源，总通过自身的边界而向振动体之外空间辐射声波，
+故大多可按边界问题处理。
+另一方面，若声场空间$V$非封闭，则公式(\ref{eq:green_kh})的面积分尚需包含
+无穷远的面积分，例如，半径为$R\to \infty$的球面积分。
+如果无穷远处无声波入射，则体积$V$内的声场$\Phi(\vb{r})$尽是$V$内体声源和
+边界$\Sigma$产生的，必有$\Phi(\vb{r})\to 0$（熄灭条件），故无穷远边界对声
+场的贡献为零，在公式(\ref{eq:green_kh})中可不考虑。
+反之，若有来自无穷远处的入射波$\Phi\subt{i}(\vb{r})$，则必须考虑$R\to \infty
+$球面的面积分。
+其效果等于在公式(\ref{eq:green_kh})中额外加上入射波项$\Phi\subt{i}(\vb{r})$。
+此属于\emph{声散射问题}，不在本文所论之列。
+
+
+公式(\ref{eq:green_kh})中尚未考虑到边界条件。
+如果Green函数$G$敢与所求声场$\Phi(\vb{r})$所满足的边界条件(\ref{eq:green_Phib})
+相应的齐次边界条件(\ref{eq:green_Gb})，则公式(\ref{eq:green_kh})可直接简化为
+\begin{equation}
+	\Phi(\vb{r}) = \iiint_V q(\vb{r}_0) G(\vb{r};\vb{r}_0) \dd \vb{r}_0
+	+\oiint_\Sigma G(\vb{r};\vb{r}_0)u(\vb{r}_0) \dd\Sigma
+	\label{eq:green_PhiSimpler}
+\end{equation}
+它显式地给出了声场的解$\Phi(\vb{r})$。
+此公式对$\Sigma$的面积分直接反映了边界辐射对声场的贡献（$u$是边界的法向振速
+）。
+至于边界面的被动反射贡献，已隐含于如此构造的Green函数$G$之中。
+如此，一旦已知Green函数，声场速度势的求解仅积分而已矣。
+然而，欲求满足与边界条件(\ref{eq:green_Phib})对应的齐次边界条件(
+\ref{eq:green_Gb})的Green函数$G$殊非易事，甚至并不比求解原边值问题(
+\ref{eq:green_Phi})简单多少。
+事实上，Green函数$G$的边界条件不必采取完全与原边界条件(\ref{eq:green_Phib})
+对应的齐次形式(\ref{eq:green_Gb})。
+在公式(\ref{eq:green_kh})的推导过程中，并未对其中的Green函数$G$的边界条件
+作任何限制，甚至可迳取自由空间的Green函数$g$。
+是以，Green函数$G$的边界条件的设定存在某种程度的主观随意性。
+但是，不同边界条件下所构造的Green函数$G$，不仅其本身的导出或计算难易悬殊，
+而且通过公式(\ref{eq:green_kh})计算声场的效率相差万千！
+我们的宗旨是尽可能通过公式(\ref{eq:green_kh})高效地求得声场$\Phi(\vb{r})$的
+（近似的）解析（或数值）解，而合理选取Green函数$G$的边界条件则可达到事半功
+倍之效。
+
+退而求其次，可令Green函数$G$满足更简单的刚性边界条件：
+$$\pdv{G}{n}=0\qc \qty(\vb{v}\in\Sigma)$$
+如此，公式(\ref{eq:green_kh})面积分中有关Green函数$G$的法向导数项自动为零。
+若声场$\Phi(\vb{r})$的边界条件(\ref{eq:green_Phib})恰也有$\eta=0$，则显式解的公式
+(\ref{eq:green_PhiSimpler})依然成立；否则，公式(\ref{eq:green_kh})变为
+\footnote{编者注：原文积分为$\dd \vb{r}_0$，实际上应该为$\dd^3\vb{r}_0$或
+$\dd V$，其中前者更优，因为它强调了是对$\vb{r}_0$而不是$\vb{r}$求积分。}：
+\begin{equation}
+	\Phi(\vb{r}) = \iiint_V q(\vb{r}_0) G(\vb{r};\vb{r}_0) \dd^3 \vb{r}_0
+	+\oiint_\Sigma G(\vb{r};\vb{r}_0) u(\vb{r}_0) \dd \Sigma -\mj
+	k\oiint_\Sigma \eta G(\vb{r};\vb{r}_0)\Phi(\vb{r}_0)\dd\Sigma
+	\label{eq:green_PhiWithImpedance}
+\end{equation}
+
+其中的第二项（面积分）仍是边界主动辐射的贡献，而第三项（面积分）是阻抗型边界
+对声场的（被动）反射效应，含特解的速度势函数的边界取值$\Phi(\vb{r}_0)$。
+结果，公式(\ref{eq:green_PhiWithImpedance})是积分方程，声场解是\emph{隐式}的
+。
+隐式解一般可借迭代、变分等计算方法求解。
+
+即使令Green函数满足$G=0$的固定边界条件亦未尝不可，只要能有效地获取简洁的$G$
+即可。
+若是，则公式(\ref{eq:green_kh})的面积分被积函数仅存包含Green函数法向导数
+的第二项。
+结果，声场解仍然是隐式的。
+
+可见，积分方法之成败关键在于Green函数$G$的构造合适与否。
+因此，求解辅助问题------获取有界空间的Green函数$G$（也就是点源的辐射声场解）
+--- --- 成为求解边界问题(\ref{eq:green_Phi})解的数学基础。
+而从公式(\ref{eq:green_PhiGreen})可知，所求Green函数，其实就是点声源所辐射的
+声场。
+
+\emph{无界空间点声源所辐射的声场}是以源点为中心的球面波，有封闭的解析解。
+然而，有界空间因存在边界与声场的相互作用，点声源所辐射声场较为复杂，求解
+边值问题(\ref{eq:green_G})殊非易事。
+仅在若干简单的情形下，可以轻易求解点源声场的封闭解析表达式，更多的时候或许只能
+借助声场简正模式的展开而获得点源声场的渐近级数表示。
 
 TBD
 
+
+\chapter{声波的吸收}
+
+% viscosity
+\section{流体的黏性与声吸收\\
+Viscosity and Sound Absorption in Fluids}
+
+\emph{摘要}\
+实际流体存在黏性并产生黏滞力，与导热并为声能耗散之因。
+黏滞力与流体的应变率成正比。
+切变产生切向黏滞力，成为流体运动的内摩擦阻力；容变产生容变黏滞力，使流体的弹性压缩膨胀不可逆。
+黏滞不仅造成声能被媒质吸收，也引起某种程度的频散效应。
+本文概述流体的黏滞力与应变熟练率的本构关系，及由此导出的黏性流体声波方程，然后简论黏滞所引起的频散与吸收效应。
+
+声吸收是媒质固有的能量损失机制，直接导致声波的耗散。
+声吸收之因是媒质固有的黏滞性和导热性。
+黏滞和导热是媒质微观分子无规运动的宏观表现，两者共同引起声的宏观机械能不可逆地转化为媒质的热能。
+寻常场合声的吸收比较微弱，在有限的时空范围内或许可以忽略不计。
+但是，能量的耗散是距离累积性的，长距传播的声波因耗散而导致的声能衰减依然可观。
+声的吸收又强烈地依赖于声波频率，频率越高，吸收越强烈。
+所以，超声波的吸收多十分显著，不能随便忽略，尤其在具有强烈吸收性的复杂媒质如生物组织中。
+此外，在某些特殊情形下，声吸收必须予以考虑。
+譬如，微孔管的切向黏滞特别强烈，声波易因强烈的吸收而迅速衰减。
+在边界突变附近，声波与不规整边界结构发生强烈的局部相互作用，会产生湍流等复杂振动，使得声能的耗损变得十分强烈。
+本文独论流体的黏滞效应所引起的耗散。
+至于热导引起的耗散，另当别论。
+
+\subsection{黏滞应力张量}
+
+流体有切变和容变两种黏性，产生切向和容变黏滞力。
+
+\subsubsection{切向黏滞}
+切变黏滞存在于有切向速度梯度的流体中，其因在于快慢不同的毗邻流层间发生分子动量交换：慢分子扩散到快层，快分子扩散到慢层。
+为阐明之，特考察最简情形。
+设有沿$y$方向流动的流体，其速度$v_y$在垂直于流动的$x$方向不均匀，即速度的$y$方向分量$v_y$是$x$的函数：$v_y=v_y(x)$，如下图所示。
+\emph{切应变率}
+$$\partial_x v_y = \pdv{x} v_y$$
+ 描述$x$方向单位长度内$y$方向速度的变化程度。
+ 在任意与流动平行的$x$平面上，左侧流体对右侧流体单位面积上施加正比于切应变率的\emph{切向黏滞应力}：
+ $$T_{xy}' = - \eta' \pdv{x} v_y(x)$$
+  比例系数$\eta'$称为（切向）\emph{黏滞系数}，负号表明黏滞力的方向与切应变率的方向相反。
+  应力是单位面积上的力，单位与压强一致，用公制表示是：牛顿/平方米。
+  由于应变率的量纲是时间的倒数，故黏滞系数的单位是：牛顿$\times$秒/平方米。
+  切黏滞应力$T_{xy}'$中的第一个下标$x$表示黏滞力的作用平面（$x$平面），第二个表示黏滞力的方向（$y$方向）。
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/absorption/viscosity_sketch.jpg}
+	\caption{流体沿$y$方向流动，其速度在$x$方向存在分布}
+	\label{fig:viscosity_sketch}
+\end{figure}
+
+ 一般，切向黏滞力与速度矢量$\vb{v}=(v_x,v_y,v_z)$的梯度
+ $$\grad \vb{v} =\qty{\partial_i v_j\qc i,j = x,y,z}$$
+ 有关。
+ 速度的梯度构成应变率张量或矩阵。
+ 然而，并非速度梯度的所有分量尽引起切黏滞。
+ 对这些分量作分解
+ $$\partial_i v_j = \frac{1}{2}\qty(\partial_i v_j + \partial_j v_i) + \frac12 (\partial_i v_j-\partial_j v_i)$$
+  就不难看出，其中包含描述流体纯 旋转的成分；例如，
+  $$\partial_x v_y - \partial_y v_x = \pdv{v_y}{x} - \partial{v_x}{y} = \qty(\curl \vb{v})_z$$
+  是速度旋度的$z$分量。
+  几何分析可以验证，速度旋度之半，
+  $$\bm{\Omega} = \frac12 \curl \vb{v}$$
+  是流体整体旋转角速度，无关乎切向黏滞，必须在切应变率张量中排除。
+  此外，速度散度$\div \vb{v}$表示流体的压缩膨胀体波变化率，对切向黏滞也无贡献，也应从切应变率张量中排除。
+  排除了这些成分之后得到的纯\emph{切应变率张量}为
+
+\begin{align*}
+	\vb{U} & = \sum_{i,j=(x,y,z)}U_{ij} \vu{e}_i \vu{e}_j\\
+	U_{ij} = U_{ji} &= \frac12 \qty(\partial_j v_i + \partial_i v_j) - \frac13 \delta_{ij} \div \vb{v}\qc \qty(\delta_{ij} = \begin{cases}1\qc i=j \\ 0\qc i\neq j\end{cases})
+\end{align*}
+注意，$U_{xx}+U_{yy}+U_{zz}=0$，恰好排除了体应变的贡献。
+\emph{切黏滞应力}是一个\emph{张量}，与切应变率张量成正比，
+\begin{align}
+	\vb{T}' = -2\eta' \vb{U}
+	\label{eq:fundamental_shear}
+\end{align}
+或者，用矩阵表示：
+$$ 
+\mqty( T_{xx}' & T_{xy}' & T_{xz}' \\
+T_{yx}' & T_{yy}' & T_{yz}' \\
+T_{zx}' & T_{yz}' & T_{zz}')
+=-2\eta'
+\mqty(
+U_{xx} & U_{xy} & U_{xz}\\
+U_{yx} & U_{yy}& U_{yz}\\
+U_{zx} & U_{zy} & U_{zz})$$
+ 因$\vb{U}$对称，切黏滞应力矩阵$\vb{T}'$也对称。
+
+
+\subsection{容变黏滞}
+\emph{容变黏滞}极类于作用于弹簧振子上的摩擦，或者漏气的轮胎，它使流体的压缩膨胀过程不可逆。
+容变黏滞产生的原因是在压缩腹背膨胀过程中声的平动机械能转化为分子内部其它自由度的内能，如双原子分子作相对振动的自由度。
+单原子分子气体的容变黏滞可以忽略。
+与切变黏滞不同，容变黏滞应力正比压缩膨胀率$\div \vb{v}$，方向垂直于流体界面。
+数学上，可用三个应力分量描述\emph{容变黏滞应力}：
+\begin{align}
+	T_{ii}'' = -\eta'' \div \vb{v} \qc \qty(i  = x,y,z)
+	\label{eq:fundamental_bulk}
+\end{align}
+比例系数$\eta''$称为容变黏滞系数。
+例如，$T_{xx}''$是作用在$x$平面单位面积上方向沿$x$方向的容变黏滞力。
+容变黏滞是各向同性的，所以容变黏滞应力与作用面的方向无关，相应的矩阵是对角的。
+
+
+\subsection{黏滞应力张量与黏滞力}
+综合 公式(\ref{eq:fundamental_shear})和(\ref{eq:fundamental_bulk})，得总的\emph{黏滞应力张量}与\emph{应变率}的关系
+\begin{align}
+\vb{T}& = \vb{T}' + \vb{T}'' = \sum_{i,j=x,y,z}T_{ij}\vu{e}_i \vu{e}_j\\
+T_{ij} & = -\eta' \qty(\partial_j v_i + \partial_i v_j -\frac23 \delta_{ij} \div \vb{v}) - \eta'' \delta_{ij} \div \vb{v} \\
+& = \begin{cases}
+	 - 2\eta' \partial_i v_i - \qty(\eta'' - \frac23 \eta') \div \vb{v}\qc &(i=j)\\
+	-\eta' \qty(\partial_j v_i + \partial_i v_j)\qc &(i\neq j)
+\end{cases}
+\end{align}
+用矩阵表示
+$$
+\vb{T}= \mqty(T_{xx} & T_{xy} & T_{xz} \\ 
+T_{yx} & T_{yy} & T_{yz} \\
+T_{zx} & T_{zy} & T_{zz})\qc
+\mqty(T_{xy} = T_{yx} \\
+T_{xz} =T_{zx} \\
+T_{yz} = T_{zy})
+$$
+它在$x$平面上的三个分量是$\vb{T}_x = (T_{xx}, T_{xy}, T_{xz})$就是该平面上单位面积的黏滞力，如下图所示。
+可见，总黏滞力的方向既不垂直于平面，也不与平面相切。
+$\vb{T}_x$可以表为张量$\vb{T}$与$x$方向单位矢量$\vu{e}_x=(1,0,0)$的点积
+$$ \vb{T}_x = \vb{T} \vdot \vu{e}_x$$
+ 或者，用矩阵运算表示
+$$
+\vb{T}_x 
+\mqty(T_{xx} \\ T_{xy} \\ T_{xz})=
+\mqty(T_{xx} & T_{xy} & T_{xz} \\ 
+T_{yx} & T_{yy} & T_{yz} \\
+T_{zx} & T_{zy} & T_{zz})\qc
+\mqty(T_{xy} = T_{yx} \\
+T_{xz} =T_{zx} \\
+T_{yz} = T_{zy})
+\mqty(1\\0\\0)
+$$
+同理，可以得到作用在$y$和$z$方向平面上的黏滞力$\vb{T}_y$和$\vb{T}_z$。
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.4\textwidth]{img/absorption/viscosity_tensor.jpg}
+	\caption{作用在$x$平面上的黏滞力$\vb{T}_x$及其分量$T_{xx}, T_{xy}, T_{xz}$}
+	\label{fig:fundamental_tensor}
+\end{figure}
+
+一般而言，流体内方向单位矢量$\vb{n}$的面积元$\dd S$受到的黏滞力可以表为
+$$\dd \vb{F}_\eta = \vb{T} \vdot \qty(\vb{n} \dd S) = \vb{T}\vdot \vb{n} \dd S = \vb{T}_n \dd S$$
+所以方向为$\vb{n}$的单位面积受到的黏滞力为
+$$\vb{T}_n = \vb{T}\vdot \vb{n}$$
+是黏 滞应力张量$\vb{T}$与作用面方向矢量$\vb{n}$的点积。
+当然，上式右端也可以表成$\vb{T}$矩阵与$\vb{n}$是矢量的乘积。
+
+\subsection{Navier-Stokes方程}
+ 体积为$V$的流体，除受到表面流压$P$之外，还受到表面黏滞力，
+ $$\oiint \vb{T}_n \dd S = \oiint \vb{T} \vdot (\vb{n}\dd S) = \iiint \div \vb{T} \dd V$$
+  其中用到了封闭曲面张量面积分的 Gauss 定理。
+  可见，单位体积的流体受到的黏滞力为
+ \begin{gather*}
+\begin{align*}
+	\vb{f}_\eta &= \div \vb{T} = -\eta' \laplacian \vb{v} -\qty(\frac{\eta'}{3}+\eta'')\grad\qty(\div \vb{v})\\
+	& = \eta' \curl \curl \vb{v} - \qty(\frac{4}{3}\eta' + \eta'')\grad \qty(\div \vb{v})
+\end{align*} \\
+\qty[\laplacian \vb{v} = \grad(\div \vb{v}) - \curl \curl \vb{v}]
+\end{gather*}
+ 其中最后等式利用了方括号中的矢量运算关系。
+ 根据牛顿定律，密度为$\rho$的流体质点的运动方程为
+ \begin{align}
+	 \rho \dv{\vb{v}}{t} = -\grad P - \vb{f}_\eta = -\grad(P-\eta \div \vb{v}) - \eta' \curl \curl \vb{v} \qc \qty(\eta\equiv \frac43 \eta'+\eta'')
+	 \label{eq:absorp_navier}
+ \end{align}
+ 此即 Navier-Stokes 方程，以取代理想流体的 Euler 方程，其中的黏滞系数$\eta$既包含容变黏滞又含切变黏滞。
+
+ 对于不可压缩流体，$\div \vb{v} = 0$。方程(\ref{eq:absorp_navier})遂简化为
+ $$\rho \dv{\vb{v}}{t} = -\grad P + \eta' \laplacian \vb{v}\qc (\curl \curl \vb{v} = -\laplacian \vb{v})$$
+  此即黏性不可压缩流体的运动方程。
+  
+  不可压缩流体中，惟切变黏滞起作用\footnote{朗道《流体力学》 第二章（中译本）。}。
+   对于诸如水等 液体，其运动本质上是不可压缩的，可用此方程描述。
+   但是，对于声波而言，媒质 是可压缩的，速度散度非零，必须采用方程(\ref{eq:absorp_navier})\footnote{P. M. Morse \& K. Uno Ingard, Theoretical Acoustics, Princeton University Press. （中译本，1984 年）。}。
+   \subsection{黏性流体的声波方程}
+ 
+在小振幅声波情形下，时间全导数可用偏导数近似，Navier-Stokes 方程(\ref{eq:absorp_navier})因此直接线性化为
+\begin{align}
+	\rho_0 \pdv{\vb{v}}{t} = -\grad (p-\eta \div \vb{v}) - \eta' \curl\curl \vb{v}
+	\label{eq:absorp_linear}
+\end{align}
+式中$\rho_0$为非扰动态的密度。
+从此方程立即可知，质点速度的旋度不为零，故而黏性流体的声波运动不再无旋。
+开篇已申明，本文不考虑声波过程中因热导而引起的耗散效应。
+故而，仍假定绝热状态方程
+\begin{align}
+	\pdv{p}{t} = -\kappa_s \div \vb{v}
+	\label{eq:absorp_state}
+\end{align}
+成立，其中$\kappa_s$为绝热弹性模量。
+方程(\ref{eq:absorp_linear})和(\ref{eq:absorp_state})构成黏性流体声波运动的基本方程组。
+
+\subsubsection{无旋和无散分量}
+根据矢量论，任何矢量皆可分解为无旋和无散（有旋）分量之和。
+对流体速度矢量$\vb{v}$作此分解
+$$\vb{v} = \vb{v}_L + \vb{v}_T$$
+$\vb{v}_L$为无旋振速分量，$\vb{v}_T$为无散度振速分量，即
+$$\curl \vb{v}_L = 0\qc \div \vb{v}_T = 0$$
+无旋分量是纵向（沿传播方向）的振动模式，无散分量是横向（与传播方向垂直）的振动模式。
+将此分解代入基本方程(\ref{eq:absorp_linear})和(\ref{eq:absorp_navier})，则可分解为两组方程：无旋
+
+TBD
 \end{document}
+
